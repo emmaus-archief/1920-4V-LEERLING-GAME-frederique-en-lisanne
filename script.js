@@ -46,9 +46,14 @@ var score = 0; // aantal behaalde punten
  * Tekent het speelveld
  */
 var tekenVeld = function () {
+<<<<<<< HEAD
   fill('green');
   rect(20, 20, width - 2 * 20, height - 2 * 20);
+=======
+  rect(25, 25, 1225, 665);
+>>>>>>> f55174154b07bc9119fbf024f7a781266feea411
 };
+
 
 
 /**
@@ -105,7 +110,15 @@ var beweegKogel = function() {
  * Updatet globale variabele spelerX en spelerY
  */
 var beweegSpeler = function() {
-
+  if (keyIsPressed && keyCode === 65) { // "a" links
+    spelerX = spelerX - 5;
+  } else if (keyIsPressed && keyCode === 68) { // "d" rechts
+    spelerX = spelerX + 5; 
+  } else if (keyIsPressed && keyCode === 87) { // "w" omhoog
+    spelerY = spelerY - 5; 
+  } else if (keyIsPressed && keyCode === 83) { // "s" omlaag
+    spelerY = spelerY + 5; 
+  }
 };
 
 
@@ -187,3 +200,4 @@ function draw() {
       break;
   }
 }
+
