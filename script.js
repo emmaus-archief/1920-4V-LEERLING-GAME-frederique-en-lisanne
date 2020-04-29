@@ -105,7 +105,15 @@ var beweegKogel = function() {
  * Updatet globale variabele spelerX en spelerY
  */
 var beweegSpeler = function() {
-
+  if (keyIsPressed && keyCode === 65) { // "a" links
+    spelerX = spelerX - 5;
+  } else if (keyIsPressed && keyCode === 68) { // "d" rechts
+    spelerX = spelerX + 5; 
+  } else if (keyIsPressed && keyCode === 87) { // "w" omhoog
+    spelerY = spelerY - 5; 
+  } else if (keyIsPressed && keyCode === 83) { // "s" omlaag
+    spelerY = spelerY + 5; 
+  }
 };
 
 
