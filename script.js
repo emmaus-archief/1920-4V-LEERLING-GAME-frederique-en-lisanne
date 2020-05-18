@@ -1,4 +1,5 @@
-/// @ts-check
+// @ts-nocheck
+
 /// <reference path=".gitpod/p5.global-mode.d.ts" />
 "use strict";
 
@@ -32,8 +33,9 @@ var vijandX = 0;   // x-positie van vijand
 var vijandY = 0;   // y-positie van vijand
 
 var score = 0; // aantal behaalde punten
-
-
+var bgImg;
+var img;
+var welkScherm = 0;
 
 
 
@@ -46,10 +48,47 @@ var score = 0; // aantal behaalde punten
  * Tekent het speelveld
  */
 var tekenVeld = function () {
-  fill("purple");
   rect(20, 20, width - 2 * 20, height - 2 * 20);
-};
+}
 
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+}
+
+function startScherm() {
+    background(0);
+    textSize(32);
+    fill(red);
+    text('Klik hier om te starten', 50,20,20,20);
+}
+
+function gameScherm() {
+    fill(blue);
+}
+
+function gameOverScherm() {
+    fill(255,255,255);
+}
+
+function draw() {
+    if (welkScherm === 0) {
+        startScherm();
+    } else if (welkScherm === 1) {
+        gameScherm();
+    } else if (welkScherm === 2) {
+        gameOverScherm();
+    }
+}
+
+function startGame() {
+    welkScherm = 1;
+}
+
+function mousePressed() {
+    if(welkScherm === 0) {
+        startGame();
+    }
+}
 
 /**
  * Tekent de vijand
@@ -72,16 +111,21 @@ var tekenKogel = function(x, y) {
 
 };
 
-
+function preload() {
+    img = loadImage('img/heidi1.jpg');
+}
 /**
  * Tekent de speler
  * @param {number} x x-coördinaat
  * @param {number} y y-coördinaat
  */
 var tekenSpeler = function(x, y) {
-  fill("white");
-  ellipse(x, y, 50, 50);
-};
+
+  // Top-left corner of the img is at (0, 0)
+  // Width and height are the img's original width and height
+  image(img, x, y);
+}
+
 
 
 /**
@@ -105,7 +149,15 @@ var beweegKogel = function() {
  * Updatet globale variabele spelerX en spelerY
  */
 var beweegSpeler = function() {
-
+  if (keyIsPressed && keyCode === 65) { // "a" links
+    spelerX = spelerX - 5;
+  } else if (keyIsPressed && keyCode === 68) { // "d" rechts
+    spelerX = spelerX + 5; 
+  } else if (keyIsPressed && keyCode === 87) { // "w" omhoog
+    spelerY = spelerY - 5; 
+  } else if (keyIsPressed && keyCode === 83) { // "s" omlaag
+    spelerY = spelerY + 5; 
+  }
 };
 
 
@@ -145,12 +197,16 @@ var checkGameOver = function() {
  * de code in deze functie wordt één keer uitgevoerd door
  * de p5 library, zodra het spel geladen is in de browser
  */
-function setup() {
-  // Maak een canvas (rechthoek) waarin je je speelveld kunt tekenen
-  createCanvas(1280, 720);
 
-  // Kleur de achtergrond blauw, zodat je het kunt zien
-  background('blue');
+
+
+
+/*
+function draw() {
+    img(bgImg,0,0);
+}
+function preload () {
+     bgImg = loadImage('img/treeSpring.jpg'); // Load the image
 }
 
 
@@ -165,6 +221,7 @@ function draw() {
       beweegVijand();
       beweegKogel();
       beweegSpeler();
+
       
       if (checkVijandGeraakt()) {
         // punten erbij
@@ -180,6 +237,10 @@ function draw() {
       tekenVijand(vijandX, vijandY);
       tekenKogel(kogelX, kogelY);
       tekenSpeler(spelerX, spelerY);
+      startScherm();
+      startGame();
+      gameScherm();
+      gameOverScherm();
 
       if (checkGameOver()) {
         spelStatus = GAMEOVER;
@@ -187,3 +248,4 @@ function draw() {
       break;
   }
 }
+
