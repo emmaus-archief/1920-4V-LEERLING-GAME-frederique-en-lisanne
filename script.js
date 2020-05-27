@@ -280,9 +280,4 @@ function draw() {
       }
       break;
   }
-<<<<<<< HEAD
 }
-
-=======
-}
->>>>>>> frederique
