@@ -41,10 +41,14 @@ var spelerSnelheid = 0.25;
 var kogelX = 0;    // x-positie van kogel
 var kogelY = 0;    // y-positie van kogel
 
-var vijandX = 0;   // x-positie van vijand
-var vijandY = 0;   // y-positie van vijand
+var vijandX = 300;   // x-positie van vijand
+var vijandY = 600;   // y-positie van vijand
+var vijandSnelheid = 2; // snelhei van de vijand
+var vijandBreedte = 50;
+var vijandHoogte = 50;
 
 var score = 0; // aantal behaalde punten
+
 
 //zwaartekracht
 var jump = false; // moet er gesprongen worden?
@@ -83,8 +87,8 @@ var tekenVeld = function () {
  * @param {number} y y-coördinaat
  */
 var tekenVijand = function(x, y) {
-    
-
+    fill(225);
+    rect(x, y, vijandBreedte, vijandHoogte);
 };
 
 
@@ -113,7 +117,13 @@ var tekenSpeler = function(x, y) {
  * Updatet globale variabelen met positie van vijand of tegenspeler
  */
 var beweegVijand = function() {
-    
+    vijandX = vijandX + vijandSnelheid;
+    if (vijandX > 400){
+        vijandSnelheid = -2;
+    }
+    if (vijandX === 300) {
+        vijandSnelheid = 2;
+    }
 };
 
 
@@ -242,7 +252,6 @@ function setup() {
   // Maak een canvas (rechthoek) waarin je je speelveld kunt tekenen
   createCanvas(canvasBreedte, canvasHoogte);
   background('black');
-  alert("(Voor Lisanne) A = links, D = rechts, spatie = springen");
 }
 
 
@@ -253,7 +262,7 @@ function setup() {
  */
 function draw() {
   switch (spelStatus) {
-    case UITLEG:
+    case UITLEG: // startscherm
       background(0);
       fill(225,225,225);
       text("klik op een toets om te beginnen!",200,200,200,200);
