@@ -20,7 +20,7 @@
 const UITLEG = 0;
 const SPELEN = 1;
 const GAMEOVER = 2;
-var spelStatus = SPELEN;
+var spelStatus = UITLEG;
 
 var canvasBreedte =  1280;
 var canvasHoogte = 720;
@@ -253,6 +253,15 @@ function setup() {
  */
 function draw() {
   switch (spelStatus) {
+    case UITLEG:
+      background(0);
+      fill(225,225,225);
+      text("klik op een toets om te beginnen!",200,200,200,200);
+
+      if(keyIsPressed === true) {
+          spelStatus = SPELEN;
+      }
+    break;
     case SPELEN:
       beweegVijand();
       beweegKogel();
@@ -266,8 +275,7 @@ function draw() {
       }
       
       if (checkSpelerGeraakt()) {
-        // leven eraf of gezondheid verlagen
-        // eventueel: nieuwe speler maken
+        spelStatus = GAMEOVER;
       }
 
       tekenVeld();
