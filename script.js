@@ -237,7 +237,6 @@ var obstakel = function() {
 
   //speler bots tegen onderkant van valObstakel
   if (collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, valObstakel.xPositie, valObstakelY + 20, valObstakel.breedte, valObstakel.hoogte - 20 )) {
-    console.log("bingo");
     staatOpObstakel = false; //speler staat niet op obstakel
     versnelling = valSnelheid; //speler valt naar beneden ('botst' tegen onderkant obstakel)
   }
@@ -386,7 +385,7 @@ function setup() {
   // Maak een canvas (rechthoek) waarin je je speelveld kunt tekenen
   createCanvas(canvasBreedte, canvasHoogte);
   background('black');
-  alert("(Voor Lisanne) A = links, D = rechts, spatie = springen.\n Moet nog opgelost worden: speler kan nog door obstakels heen bewegen.");
+  alert("(Voor Lisanne) A = links, D = rechts, spatie = springen");
 }
 
 
