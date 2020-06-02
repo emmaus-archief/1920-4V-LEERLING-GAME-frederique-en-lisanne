@@ -42,14 +42,14 @@ var spelerSnelheid = 0.25;
 var kogelX = 0;    // x-positie van kogel
 var kogelY = 0;    // y-positie van kogel
 
-var vijandX = 300;   // x-positie van vijand
-var vijandY = 600;   // y-positie van vijand
+var vijandX = 450;   // x-positie van vijand
+var vijandY = 210;   // y-positie van vijand
 var vijandSnelheid = 2; // snelhei van de vijand
 var vijandBreedte = 50;
 var vijandHoogte = 50;
 
 var score = 0; // aantal behaalde punten
-
+var spelerPlaatje;
 
 //zwaartekracht
 var jump = false; // moet er gesprongen worden?
@@ -109,8 +109,7 @@ var tekenKogel = function(x, y) {
  * @param {number} y y-coördinaat
  */
 var tekenSpeler = function(x, y) {
-  fill("white");
-  rect(x, y, spelerBreedte, spelerHoogte);
+  image(spelerPlaatje,x,y,spelerBreedte,spelerHoogte);
 };
 
 
@@ -119,14 +118,17 @@ var tekenSpeler = function(x, y) {
  */
 var beweegVijand = function() {
     vijandX = vijandX + vijandSnelheid;
-    if (vijandX > 400){
+    if (vijandX > 580){
         vijandSnelheid = -2;
     }
-    if (vijandX === 300) {
+    if (vijandX === 450) {
         vijandSnelheid = 2;
     }
 };
 
+function preload(){
+    spelerPlaatje = loadImage('img/foto.png');
+}
 
 /**
  * Updatet globale variabelen met positie van kogel of bal
