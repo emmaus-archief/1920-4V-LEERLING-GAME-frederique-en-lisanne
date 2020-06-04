@@ -168,13 +168,6 @@ var beweegVijand = function() {
     }
 };
 
-function preload(){
-    spelerPlaatje = loadImage('img/foto.png');
-    level1Plaatje = loadImage('img/zomer.jpg');
-    level2Plaatje = loadImage('img/herfst.jpg');
-    level3Plaatje = loadImage('img/winter.jpg');
-    level4Plaatje = loadImage('img/lente.jpg');
-}
 
 /**
  * Updatet globale variabelen met positie van kogel of bal
@@ -206,6 +199,12 @@ function preload() {
 
   achtergrondImg = loadImage('afbeeldingen/achtergrond.png');
   schaapImg = loadImage('afbeeldingen/schaap.png');
+
+   spelerPlaatje = loadImage('img/foto.png');
+    level1Plaatje = loadImage('img/zomer.jpg');
+    level2Plaatje = loadImage('img/herfst.jpg');
+    level3Plaatje = loadImage('img/winter.jpg');
+    level4Plaatje = loadImage('img/lente.jpg');
 
 }
 
