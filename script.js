@@ -18,8 +18,11 @@
 /* ********************************************* */
 
 const UITLEG = 0;
-const SPELEN = 1;
-const GAMEOVER = 2;
+const LEVEL1= 1;
+const LEVEL2 = 2;
+const LEVEL3 = 3;
+const LEVEL4 = 4;
+const GAMEOVER = 5;
 var spelStatus = UITLEG;
 
 var canvasBreedte =  1280;
@@ -44,10 +47,14 @@ var naarLinks = false;
 var kogelX = 0;    // x-positie van kogel
 var kogelY = 0;    // y-positie van kogel
 
-var vijandX = 0;   // x-positie van vijand
-var vijandY = 0;   // y-positie van vijand
+var vijandX = 450;   // x-positie van vijand
+var vijandY = 230;   // y-positie van vijand
+var vijandSnelheid = 2; // snelhei van de vijand
+var vijandBreedte = 50;
+var vijandHoogte = 50;
 
 var score = 0; // aantal behaalde punten
+var spelerPlaatje;
 
 //zwaartekracht
 var jump = false; // moet er gesprongen worden?
@@ -66,6 +73,11 @@ var obstakelImage;
 var achtergrondImg;
 var schaapImg;
 
+// uitlegscherm
+var levelHeight = 75;
+var levelWidth = 300;
+var levelX = 100;
+var levelY = 100;
 /* ********************************************* */
 /*      functies die je gebruikt in je game      */
 /* ********************************************* */
@@ -91,8 +103,8 @@ var tekenVeld = function () {
  * @param {number} y y-coördinaat
  */
 var tekenVijand = function(x, y) {
-    
-
+    fill(0, 0 , 0);
+    rect(x, y, vijandBreedte, vijandHoogte);
 };
 
 var schaapBreedte = 80;
@@ -139,9 +151,18 @@ var tekenSpeler = function(x, y) {
  * Updatet globale variabelen met positie van vijand of tegenspeler
  */
 var beweegVijand = function() {
-    
+    vijandX = vijandX + vijandSnelheid;
+    if (vijandX > 580){
+        vijandSnelheid = -2;
+    }
+    if (vijandX === 450) {
+        vijandSnelheid = 2;
+    }
 };
 
+function preload(){
+    spelerPlaatje = loadImage('img/foto.png');
+}
 
 /**
  * Updatet globale variabelen met positie van kogel of bal
@@ -453,7 +474,19 @@ function setup() {
   alert("(Voor Lisanne) A = links, D = rechts, spatie = springen\n De rode obstakels worden weggehaald als alles een plaatje heeft");
 }
 
-
+function uitlegScherm(){
+    background(225);
+    fill(225,0,0);
+    rect(levelX,levelY,levelWidth,levelHeight);
+    rect(levelX,levelY + 100,levelWidth,levelHeight);
+    rect(levelX,levelY + 200,levelWidth,levelHeight);
+    rect(levelX,levelY + 300,levelWidth,levelHeight);
+    fill(225,225,0);
+    text('level 1',levelX + 100,levelY + 32,100,100);
+    text('level 2',levelX + 100,levelY + 132,100,100);
+    text('level 3',levelX + 100,levelY + 232,100,100);
+    text('level 4',levelX + 100,levelY + 332,100,100);
+}
 /**
  * draw
  * de code in deze functie wordt meerdere keren per seconde
@@ -461,20 +494,22 @@ function setup() {
  */
 function draw() {
   switch (spelStatus) {
-    case GAMEOVER:
-        alert("GAMEOVER");
-    break; 
-    
-    case UITLEG:
-      background(0);
-      fill(225,225,225);
-      text("klik op een toets om te beginnen!",200,200,200,200);
-
-      if(keyIsPressed === true) {
-          spelStatus = SPELEN;
-      }
+    case UITLEG: // startscherm
+    uitlegScherm();
+    if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + levelHeight && mouseY >= levelY) {
+        spelStatus = LEVEL1;
+    }
+    if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 100 + levelHeight && mouseY >= levelY + 100) {
+        spelStatus = LEVEL2;
+    }
+    if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 200 + levelHeight && mouseY >= levelY + 200) {
+        spelStatus = LEVEL3;
+    }
+    if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 300 + levelHeight && mouseY >= levelY + 300) {
+        spelStatus = LEVEL4;
+    }
     break;
-    case SPELEN:
+    case LEVEL1:
       beweegVijand();
       beweegKogel();
       beweegSpeler();
@@ -486,6 +521,10 @@ function draw() {
       
       if (checkSpelerGeraakt()) {
         spelStatus = GAMEOVER;
+      }
+
+      if(collideRectRect(spelerX,spelerY,spelerBreedte,spelerHoogte,vijandX,vijandY,vijandBreedte,vijandHoogte)){
+          console.log("het spel is voorbij");
       }
 
       spelerSpringen();
@@ -501,5 +540,19 @@ function draw() {
         spelStatus = GAMEOVER;
       }
       break;
+      case LEVEL2:
+        background(0);
+      break;
+       case LEVEL3:
+        background(225,0,0);
+      break;
+       case LEVEL4:
+        background(225,225,0);
+      break;
+      case GAMEOVER:
+      background(225,225,0);
+      break;
+
+
   }
 }
