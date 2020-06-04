@@ -67,12 +67,6 @@ var maxHoogte = 20;
 var sprongTeller = 0; //houdt bij hoevaak de speler springt
 var springRichting = 0;
 
-var spelerImage;
-var ondergrondImg;
-var obstakelImage;
-var achtergrondImg;
-var schaapImg;
-
 // uitlegscherm
 var levelHeight = 150;
 var levelWidth = 200;
@@ -84,6 +78,13 @@ var level1Plaatje;
 var level2Plaatje;
 var level3Plaatje;
 var level4Plaatje;
+var spelerImage;
+var ondergrondImg;
+var obstakelImage;
+var achtergrondImg;
+var schaapImg;
+var sleutelImg;
+
 /* ********************************************* */
 /*      functies die je gebruikt in je game      */
 /* ********************************************* */
@@ -131,13 +132,24 @@ var tekenSchaap = function() {
     
 
     if (collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, schaapX[i], schaapY[i], schaapBreedte, schaapHoogte)) {
+        if(i = 1) {
         schaapIsZichtbaar = false;
         console.log("Schaap is niet meer zichtbaar");
+        aantalSchapen = aantalSchapen + 1;
+        }
     }
     }
-  
-
 };
+
+var aantalSchapen = 0;
+
+var schapenTeller = function() {
+    fill("white");
+    rect(1150, 30, 100, 50);
+    fill("black");
+    textSize(20);
+    text(aantalSchapen + " x ",  1175, 55);
+}
 
 var test = 1;
 /**
@@ -148,8 +160,11 @@ var test = 1;
 var tekenSpeler = function(x, y) {
    if (naarRechts === true || inDeLucht === true && springRichting > 0){ //speler is in de lucht en springt naar rechts
      image(spelerImage[1], x, y, spelerBreedte, spelerHoogte);
+     naarRechts = true; //zodat de sleutel wisselt van kant
   } else if(naarLinks === true || inDeLucht === true && springRichting < 0) {
       image(spelerImage[2], x, y, spelerBreedte, spelerHoogte);
+      naarLinks = true; //zodat de sleutel wisselt van kant
+
   } else { image(spelerImage[0], x, y, spelerBreedte, spelerHoogte); //speler beweegt niet naar links of rechts
   }
 };
@@ -205,6 +220,40 @@ function preload() {
     level2Plaatje = loadImage('img/herfst.jpg');
     level3Plaatje = loadImage('img/winter.jpg');
     level4Plaatje = loadImage('img/lente.jpg');
+    sleutelImg = loadImage('afbeeldingen/sleutel.png');
+
+}
+
+var sleutelX = 900;
+var sleutelY = grasHoogte - 50;
+var sleutelBreedte = 50;
+var sleutelHoogte = 50;
+var heeftSleutelVast = false;
+var sleutelIsZichtbaar = true;
+var sleutelIsOpgepakt = false;
+
+var sleutel = function() {
+    if(sleutelIsZichtbaar) {
+    image(sleutelImg, sleutelX, sleutelY, sleutelBreedte, sleutelHoogte);
+    }
+    
+    if(collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, sleutelX, sleutelY, sleutelBreedte, sleutelHoogte)) {
+        heeftSleutelVast = true;
+        sleutelIsOpgepakt = true;
+    }
+
+    if(heeftSleutelVast === true && sleutelIsOpgepakt === true ) {
+        if(naarRechts === true) {
+        sleutelX = spelerX - 20;
+        sleutelY = spelerY + 50;
+        }
+        else if(naarLinks === true) {
+        sleutelX = spelerX + sleutelBreedte;
+        sleutelY = spelerY + 50;
+        } 
+    }
+
+
 
 }
 
@@ -279,6 +328,7 @@ var obstakel = function() {
       tegenObstakelLinks = true;
       staatOpObstakel = false; //speler staat niet op obstakel
       versnelling = valSnelheid; //speler valt naar beneden ('botst' tegen onderkant obstakel)
+      heeftSleutelVast = true;
     }
 
     else if (collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte,  //RECHTS
@@ -286,6 +336,7 @@ var obstakel = function() {
         tegenObstakelRechts = true;
         staatOpObstakel = false; //speler staat niet op obstakel
         versnelling = valSnelheid; //speler valt naar beneden ('botst' tegen onderkant obstakel)
+        heeftSleutelVast = true;
      
      }
     
@@ -334,12 +385,16 @@ var obstakel = function() {
   rect(duwObstakelX, duwObstakel.yPositie, duwObstakel.breedte, duwObstakel.hoogte);
   if(spelerX + spelerBreedte >= duwObstakelX && spelerY + spelerHoogte <= duwObstakel.yPositie + duwObstakel.hoogte && 
     spelerY + spelerHoogte >= duwObstakel.yPositie) {
-      tegenDuwObstakel = true;
-      duwObstakelX = duwObstakelX + 10;
-    if(duwObstakelX + duwObstakel.breedte >= obstakelX[3] + obstakelBreedte[3] ) {
-      duwObstakelX = obstakelX[3] + obstakelBreedte[3] - duwObstakel.breedte;
+    if(heeftSleutelVast === true && sleutelIsOpgepakt === true) {
+        tegenDuwObstakel = true;
+         duwObstakelX = duwObstakelX + 10; } //duwObstakel verschuift naar links als de speler er tegenaan loopt
+    else {
+      tegenObstakelLinks = true; //speler kan niet door duwObstakel zonder sleutel
+         } 
     }
-  }
+  if(duwObstakelX + duwObstakel.breedte >= obstakelX[3] + obstakelBreedte[3] ) { //duwObstakel stopt met bewegen
+      duwObstakelX = obstakelX[3] + obstakelBreedte[3] - duwObstakel.breedte;
+  } 
 };
 
 
@@ -382,11 +437,11 @@ var beweegSpeler = function() {
 };
 
 //LATER WEGHALEN
-//function locatie() { //om te kijken op welke plaats je de obstakels wilt plaatsen
-  //fill("white");
-  //text("X: "+mouseX, 800, 300);
-  //text("Y: "+mouseY, 800, 350);
-//} 
+function locatie() { //om te kijken op welke plaats je de obstakels wilt plaatsen
+  fill("white");
+  text("X: "+mouseX, 800, 300);
+  text("Y: "+mouseY, 800, 350);
+} 
 
 var inDeLucht = false;
 
@@ -419,8 +474,14 @@ var checkVijandGeraakt = function() {
  * @returns {boolean} true als speler is geraakt
  */
 var checkSpelerGeraakt = function() {
+    if(collideRectRect(spelerX,spelerY,spelerBreedte,spelerHoogte,vijandX,vijandY,vijandBreedte,vijandHoogte)){
+        console.log("De speler is geraakt door de vijand");
+        return true;
+      }
+    else {
+        return false;
+    }
     
-  return false;
 };
 
 
@@ -540,9 +601,6 @@ function draw() {
         spelStatus = GAMEOVER;
       }
 
-      if(collideRectRect(spelerX,spelerY,spelerBreedte,spelerHoogte,vijandX,vijandY,vijandBreedte,vijandHoogte)){
-          console.log("het spel is voorbij");
-      }
 
       spelerSpringen();
       zwaartekracht();
@@ -552,7 +610,9 @@ function draw() {
       tekenSpeler(spelerX, spelerY);
       obstakel();
       menu();
-      //locatie();
+      locatie();
+      schapenTeller();
+      sleutel();
 
       if (checkGameOver()) {
         spelStatus = GAMEOVER;
@@ -572,6 +632,7 @@ function draw() {
       break;
       case GAMEOVER:
       background(225,225,0);
+      menu();
       break;
 
 
