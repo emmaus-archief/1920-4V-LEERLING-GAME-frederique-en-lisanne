@@ -74,10 +74,16 @@ var achtergrondImg;
 var schaapImg;
 
 // uitlegscherm
-var levelHeight = 75;
-var levelWidth = 300;
-var levelX = 100;
-var levelY = 100;
+var levelHeight = 150;
+var levelWidth = 200;
+var levelX = 1000;
+var levelY = 20;
+
+// plaatjes
+var level1Plaatje;
+var level2Plaatje;
+var level3Plaatje;
+var level4Plaatje;
 /* ********************************************* */
 /*      functies die je gebruikt in je game      */
 /* ********************************************* */
@@ -86,6 +92,8 @@ var levelY = 100;
 /**
  * Tekent het speelveld
  */
+
+
 var tekenVeld = function () {
   image(achtergrondImg, 20, 20, veldBreedte, veldHoogte);
 
@@ -162,6 +170,10 @@ var beweegVijand = function() {
 
 function preload(){
     spelerPlaatje = loadImage('img/foto.png');
+    level1Plaatje = loadImage('img/zomer.jpg');
+    level2Plaatje = loadImage('img/herfst.jpg');
+    level3Plaatje = loadImage('img/winter.jpg');
+    level4Plaatje = loadImage('img/lente.jpg');
 }
 
 /**
@@ -474,18 +486,27 @@ function setup() {
   alert("(Voor Lisanne) A = links, D = rechts, spatie = springen\n De rode obstakels worden weggehaald als alles een plaatje heeft");
 }
 
+function menu(){
+    fill(0);
+    rect(20,20,200,50);
+    fill(0,220,22);
+    text('terug',20,20,20,20);
+    if(mouseIsPressed && mouseX <= 20 + 200 && mouseX >= 20 && mouseY <= 20 + 50 && mouseY >= 20) {
+        spelStatus = UITLEG;
+    }
+}
 function uitlegScherm(){
-    background(225);
+    background(0);
     fill(225,0,0);
-    rect(levelX,levelY,levelWidth,levelHeight);
-    rect(levelX,levelY + 100,levelWidth,levelHeight);
-    rect(levelX,levelY + 200,levelWidth,levelHeight);
-    rect(levelX,levelY + 300,levelWidth,levelHeight);
-    fill(225,225,0);
-    text('level 1',levelX + 100,levelY + 32,100,100);
-    text('level 2',levelX + 100,levelY + 132,100,100);
-    text('level 3',levelX + 100,levelY + 232,100,100);
-    text('level 4',levelX + 100,levelY + 332,100,100);
+    image(level1Plaatje, levelX,levelY,levelWidth,levelHeight);
+    image(level2Plaatje, levelX,levelY + 170,levelWidth,levelHeight);
+    image(level3Plaatje ,levelX,levelY + 340,levelWidth,levelHeight);
+    image(level4Plaatje ,levelX,levelY + 510,levelWidth,levelHeight);
+    fill(0);
+    text('level 1',levelX + 100,levelY + 75,100,100);
+    text('level 2',levelX + 100,levelY + 245,100,100);
+    text('level 3',levelX + 100,levelY + 415,100,100);
+    text('level 4',levelX + 100,levelY + 585,100,100);
 }
 /**
  * draw
@@ -498,14 +519,11 @@ function draw() {
     uitlegScherm();
     if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + levelHeight && mouseY >= levelY) {
         spelStatus = LEVEL1;
-    }
-    if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 100 + levelHeight && mouseY >= levelY + 100) {
+    } else if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 170 + levelHeight && mouseY >= levelY + 170) {
         spelStatus = LEVEL2;
-    }
-    if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 200 + levelHeight && mouseY >= levelY + 200) {
+    } else if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 340 + levelHeight && mouseY >= levelY + 340) {
         spelStatus = LEVEL3;
-    }
-    if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 300 + levelHeight && mouseY >= levelY + 300) {
+    } else if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 510 + levelHeight && mouseY >= levelY + 510) {
         spelStatus = LEVEL4;
     }
     break;
@@ -534,6 +552,7 @@ function draw() {
       tekenSchaap();
       tekenSpeler(spelerX, spelerY);
       obstakel();
+      menu();
       //locatie();
 
       if (checkGameOver()) {
@@ -541,13 +560,16 @@ function draw() {
       }
       break;
       case LEVEL2:
-        background(0);
+        background(0,225,225);
+        menu();
       break;
        case LEVEL3:
         background(225,0,0);
+        menu();
       break;
        case LEVEL4:
         background(225,225,0);
+        menu();
       break;
       case GAMEOVER:
       background(225,225,0);
