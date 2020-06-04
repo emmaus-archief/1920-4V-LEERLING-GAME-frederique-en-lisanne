@@ -18,8 +18,11 @@
 /* ********************************************* */
 
 const UITLEG = 0;
-const SPELEN = 1;
-const GAMEOVER = 2;
+const LEVEL1= 1;
+const LEVEL2 = 2;
+const LEVEL3 = 3;
+const LEVEL4 = 4;
+const GAMEOVER = 5;
 var spelStatus = UITLEG;
 
 var canvasBreedte =  1280;
@@ -62,6 +65,11 @@ var maxHoogte = 20;
 var sprongTeller = 0; //houdt bij hoevaak de speler springt
 var springRichting = 0;
 
+// uitlegscherm
+var levelHeight = 75;
+var levelWidth = 300;
+var levelX = 100;
+var levelY = 100;
 /* ********************************************* */
 /*      functies die je gebruikt in je game      */
 /* ********************************************* */
@@ -398,8 +406,19 @@ function setup() {
   createCanvas(canvasBreedte, canvasHoogte);
   background('black');
 }
-
-
+function uitlegScherm(){
+    background(225);
+    fill(225,0,0);
+    rect(levelX,levelY,levelWidth,levelHeight);
+    rect(levelX,levelY + 100,levelWidth,levelHeight);
+    rect(levelX,levelY + 200,levelWidth,levelHeight);
+    rect(levelX,levelY + 300,levelWidth,levelHeight);
+    fill(225,225,0);
+    text('level 1',levelX + 100,levelY + 32,100,100);
+    text('level 2',levelX + 100,levelY + 132,100,100);
+    text('level 3',levelX + 100,levelY + 232,100,100);
+    text('level 4',levelX + 100,levelY + 332,100,100);
+}
 /**
  * draw
  * de code in deze functie wordt meerdere keren per seconde
@@ -408,15 +427,21 @@ function setup() {
 function draw() {
   switch (spelStatus) {
     case UITLEG: // startscherm
-      background(0);
-      fill(225,225,225);
-      text("klik op een toets om te beginnen!",200,200,200,200);
-
-      if(keyIsPressed === true) {
-          spelStatus = SPELEN;
-      }
+    uitlegScherm();
+    if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + levelHeight && mouseY >= levelY) {
+        spelStatus = LEVEL1;
+    }
+    if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 100 + levelHeight && mouseY >= levelY + 100) {
+        spelStatus = LEVEL2;
+    }
+    if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 200 + levelHeight && mouseY >= levelY + 200) {
+        spelStatus = LEVEL3;
+    }
+    if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 300 + levelHeight && mouseY >= levelY + 300) {
+        spelStatus = LEVEL4;
+    }
     break;
-    case SPELEN:
+    case LEVEL1:
       beweegVijand();
       beweegKogel();
       beweegSpeler();
@@ -428,6 +453,10 @@ function draw() {
       
       if (checkSpelerGeraakt()) {
         spelStatus = GAMEOVER;
+      }
+
+      if(collideRectRect(spelerX,spelerY,spelerBreedte,spelerHoogte,vijandX,vijandY,vijandBreedte,vijandHoogte)){
+          console.log("het spel is voorbij");
       }
 
       spelerSpringen();
@@ -443,5 +472,19 @@ function draw() {
         spelStatus = GAMEOVER;
       }
       break;
+      case LEVEL2:
+        background(0);
+      break;
+       case LEVEL3:
+        background(225,0,0);
+      break;
+       case LEVEL4:
+        background(225,225,0);
+      break;
+      case GAMEOVER:
+      background(225,225,0);
+      break;
+
+
   }
 }
