@@ -18,11 +18,13 @@
 /* ********************************************* */
 
 const UITLEG = 0;
-const LEVEL1= 1;
-const LEVEL2 = 2;
-const LEVEL3 = 3;
-const LEVEL4 = 4;
-const GAMEOVER = 5;
+const LEVEL = 1;
+const LEVEL1= 2;
+const LEVEL2 = 3;
+const LEVEL3 = 4;
+const LEVEL4 = 5;
+const GAMEOVER = 6;
+const GEWONNEN = 7;
 var spelStatus = UITLEG;
 
 var canvasBreedte =  1280;
@@ -84,6 +86,7 @@ var obstakelImage;
 var achtergrondImg;
 var schaapImg;
 var sleutelImg;
+var vlagPlaatje;
 
 /* ********************************************* */
 /*      functies die je gebruikt in je game      */
@@ -221,6 +224,7 @@ function preload() {
     level3Plaatje = loadImage('img/winter.jpg');
     level4Plaatje = loadImage('img/lente.jpg');
     sleutelImg = loadImage('afbeeldingen/sleutel.png');
+    vlagPlaatje = loadImage('img/vlag.png');
 
 }
 
@@ -552,11 +556,32 @@ function menu(){
     text('terug',20,20,20,20);
     if(mouseIsPressed && mouseX <= 20 + 200 && mouseX >= 20 && mouseY <= 20 + 50 && mouseY >= 20) {
         spelStatus = UITLEG;
+        spelerX = 50;
+        spelerY = grasHoogte - spelerHoogte;
     }
 }
 
+var vlagX = 1190;
+var vlagY = 370;
+var vlagBreedte = 50;
+var vlagHoogte = 100;
 
+function eind(){
+    fill(0);
+    image(vlagPlaatje,vlagX,vlagY,vlagBreedte,vlagHoogte);
+    if(collideRectRect(spelerX,spelerY,spelerBreedte,spelerHoogte,vlagX,vlagY,vlagBreedte,vlagHoogte)){
+        spelStatus = GEWONNEN;
+    }
+}
 
+var nextX = canvasBreedte/2;
+var nextY = canvasHoogte/2;
+function next(){
+    rect(nextX,nextY,20,20);
+    if(mouseIsPressed && mouseX <= nextX + 20 && mouseX >= nextX && mouseY <= nextY + 20 && mouseY >= nextY){
+        spelStatus = LEVEL2;
+    }
+}
 function uitlegScherm(){
     background(0);
     fill(225,0,0);
@@ -615,6 +640,7 @@ function draw() {
       locatie();
       schapenTeller();
       sleutel();
+      eind();
 
       if (checkGameOver()) {
         spelStatus = GAMEOVER;
@@ -633,8 +659,15 @@ function draw() {
         menu();
       break;
       case GAMEOVER:
-      background(225,225,0);
+      background(225,225,225);
+      fill(0);
+      text('GAME OVER',canvasBreedte/2, canvasHoogte/2,20,20);
       menu();
+      break;
+      case GEWONNEN:
+          background(225,0,0);
+          menu();
+          next();
       break;
 
 
