@@ -562,11 +562,10 @@ function menu(){
         spelerY = grasHoogte - spelerHoogte;
         valObstakelY = 130;
         duwObstakelX = 950;
-        sleutelX = 900;
-        sleutelY = grasHoogte - 50;
+        sleutelX = 600;
+        sleutelY = 75;
     }
 }
-
 
 
 
