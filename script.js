@@ -493,6 +493,9 @@ function menu(){
         spelStatus = UITLEG;
     }
 }
+
+
+
 function uitlegScherm(){
     background(0);
     fill(225,0,0);
