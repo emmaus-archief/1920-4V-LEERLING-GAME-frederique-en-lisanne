@@ -87,6 +87,7 @@ var achtergrondImg;
 var schaapImg;
 var sleutelImg;
 var vlagPlaatje;
+var gewonnenPlaatje;
 
 /* ********************************************* */
 /*      functies die je gebruikt in je game      */
@@ -225,7 +226,7 @@ function preload() {
     level4Plaatje = loadImage('img/lente.jpg');
     sleutelImg = loadImage('afbeeldingen/sleutel.png');
     vlagPlaatje = loadImage('img/vlag.png');
-
+    gewonnenPlaatje = loadImage('img/gewonnen.jpg');
 }
 
 var sleutelX = 900;
@@ -574,17 +575,23 @@ function eind(){
     }
 }
 
-var nextX = canvasBreedte/2;
-var nextY = canvasHoogte/2;
+var nextX = 638;
+var nextY = canvasHoogte/4*3;
 function next(){
-    rect(nextX,nextY,20,20);
-    if(mouseIsPressed && mouseX <= nextX + 20 && mouseX >= nextX && mouseY <= nextY + 20 && mouseY >= nextY){
+    fill(0);
+    background(75,0,160);
+    image(gewonnenPlaatje,290,50,700,400);
+    ellipse(nextX,nextY,200,50);
+    if(mouseIsPressed && mouseX <= nextX + 100 && mouseX >= nextX && mouseY <= nextY + 100 && mouseY >= nextY){
         spelStatus = LEVEL2;
     }
+    fill(255);
+    text("NEXT",612,533,50,50);
 }
 function uitlegScherm(){
-    background(0);
-    fill(225,0,0);
+    background(190,220,240);
+    fill(0);
+    text("titel",500,340,200,200);
     image(level1Plaatje, levelX,levelY,levelWidth,levelHeight);
     image(level2Plaatje, levelX,levelY + 170,levelWidth,levelHeight);
     image(level3Plaatje ,levelX,levelY + 340,levelWidth,levelHeight);
@@ -595,6 +602,8 @@ function uitlegScherm(){
     text('level 3',levelX + 100,levelY + 415,100,100);
     text('level 4',levelX + 100,levelY + 585,100,100);
 }
+
+
 /**
  * draw
  * de code in deze functie wordt meerdere keren per seconde
@@ -649,9 +658,10 @@ function draw() {
       case LEVEL2:
         background(0,225,225);
         menu();
+        fill(0);
+        text("LEVEL 2",canvasBreedte/2,canvasHoogte/2,20,20);
       break;
        case LEVEL3:
-        background(225,0,0);
         menu();
       break;
        case LEVEL4:
@@ -665,7 +675,6 @@ function draw() {
       menu();
       break;
       case GEWONNEN:
-          background(225,0,0);
           menu();
           next();
       break;
