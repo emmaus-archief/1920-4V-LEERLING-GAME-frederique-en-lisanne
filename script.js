@@ -47,8 +47,8 @@ var naarLinks = false;
 var kogelX = 0;    // x-positie van kogel
 var kogelY = 0;    // y-positie van kogel
 
-var vijandX = [20, 655];   // x-positie van vijand
-var vijandY = [315, 600];   // y-positie van vijand
+var vijandX = [20, 655];
+var vijandY = [315, 600];
 var vijandSnelheid = 2; // snelhei van de vijand
 var vijandBreedte = 50;
 var vijandHoogte = 50;
@@ -85,6 +85,10 @@ var achtergrondImg;
 var schaapImg;
 var sleutelImg;
 
+//schapen
+var schaapY = [];
+var schaapX = [];
+
 /* ********************************************* */
 /*      functies die je gebruikt in je game      */
 /* ********************************************* */
@@ -105,13 +109,26 @@ var tekenVeld = function () {
 
 };
 
+var test1 = 20;
+var test2 = 315;
 
 /**
  * Tekent de vijand
- * @param {number} x x-coördinaat
- * @param {number} y y-coördinaat
+ * 
  */
-var tekenVijand = function(x, y) {
+var tekenVijand = function() {
+    /*
+ if (spelStatus === LEVEL1 ) {
+  vijandX = [20, 655];
+  vijandY = [315, 600];
+ } 
+
+ if(spelStatus === LEVEL2) {
+    vijandX = [150, 710, 240];   // x-positie van vijand
+    vijandY = [270, 270, 130 ];   // y-positie van vijand
+ } */
+
+
  for (var i = 0; i < vijandX.length; i++) {
     fill(0, 0 , 0);
     rect(vijandX[i], vijandY[i], vijandBreedte, vijandHoogte); 
@@ -127,11 +144,10 @@ var alleSchapenZichtbaar = true;
  * Tekent schaap
  */
 var tekenSchaap = function() {
-    var schaapY = [];
-    var schaapX = [];
-    
-        schaapY.push(590, 70, 410);
-        schaapX.push(1140, 456, 1130);
+    if(spelStatus === LEVEL1) {
+        schaapY= [590, 70, 410];
+        schaapX = [1140, 456, 1130];
+    }
   
  for (var i = 0; i < schaapX.length; i++) {
     image(schaapImg, schaapX[i], schaapY[i], schaapBreedte, schaapHoogte)
@@ -151,6 +167,7 @@ var tekenSchaap = function() {
 var aantalSchapen = 0;
 
 var schapenTeller = function() {
+    noStroke();
     fill("white");
     rect(1150, 30, 100, 50);
     fill("black");
@@ -158,13 +175,22 @@ var schapenTeller = function() {
     text(aantalSchapen + " x ",  1175, 55);
 }
 
-var test = 1;
+var schuinLopen = false;
 /**
  * Tekent de speler
  * @param {number} x x-coördinaat
  * @param {number} y y-coördinaat
  */
 var tekenSpeler = function(x, y) {
+if(spelerSchuin === true) {
+    push();
+    translate(280, -150) // speler staat op het schuine obstakel
+   // spelerX = 0; // = 480
+  //  spelerY = 0; // = 365
+    rotate(30); // speler wordt gedraaid
+    schuinLopen = true;
+
+}
    if (naarRechts === true || inDeLucht === true && springRichting > 0){ //speler is in de lucht en springt naar rechts
      image(spelerImage[1], x, y, spelerBreedte, spelerHoogte);
      naarRechts = true; //zodat de sleutel wisselt van kant
@@ -174,20 +200,39 @@ var tekenSpeler = function(x, y) {
 
   } else { image(spelerImage[0], x, y, spelerBreedte, spelerHoogte); //speler beweegt niet naar links of rechts
   }
+
+ if(spelerSchuin === true) {
+    pop(); } //stop het draaien 
+
 };
 
+var vijandRechts = 190;
+var vijandLinks = 20;
 
 /**
  * Updatet globale variabelen met positie van vijand of tegenspeler
  */
 var beweegVijand = function() {
+
     vijandX[0] = vijandX[0] + vijandSnelheid;
-    if (vijandX[0] > 190){
+    
+    if (vijandX[0] > vijandRechts){
         vijandSnelheid = -1;
     }
-    if (vijandX[0] === 20) {
+    if (vijandX[0] === vijandLinks) {
         vijandSnelheid = 1;
     } 
+
+    if (spelStatus === LEVEL1) {
+        vijandRechts = 190;
+        vijandLinks = 20;   
+    }
+
+    if(spelStatus === LEVEL2) {
+        vijandRechts = 730;
+        vijandLinks = 130;
+    }
+
 };
 
 
@@ -287,13 +332,19 @@ var valObstakel = {
 }
 var valObstakelY = 130;
 
+var obstakelX =       [] ;
+var obstakelY=        [];
+var obstakelBreedte = [] ;
+var obstakelHoogte =  [];
 
 
-var obstakel = function() {
-  var obstakelX =       [290, 525, 810, 950, 410, 20, 20 , 190, 950, 390] 
-  var obstakelY=        [590, 500, 470, 280, 280, 365, 250, 130, 20 , 610 ]
-  var obstakelBreedte = [100, 120, 430, 150, 250, 365, 80 , 470, 10 , 135 ] 
-  var obstakelHoogte =  [100 , 168, 60 , 210, 15 , 30 , 30 , 15 , 120, 90  ] 
+var tekenObstakel = function() {
+    if(spelStatus === 1) {
+    obstakelX =       [290, 525, 810, 950, 410, 20, 20 , 190, 950, 390] 
+    obstakelY=        [590, 500, 470, 280, 280, 365, 250, 130, 20 , 610 ]
+    obstakelBreedte = [100, 120, 430, 150, 250, 365, 80 , 470, 10 , 135 ] 
+    obstakelHoogte =  [100 , 168, 60 , 210, 15 , 30 , 30 , 15 , 120, 90  ] 
+    }
 
   //platforms
   for (var i = 0; i < obstakelX.length; i++) {
@@ -304,13 +355,18 @@ var obstakel = function() {
     image(obstakelImage[1], obstakelX[0], obstakelY[0], obstakelBreedte[0], obstakelHoogte[0]);
     image(obstakelImage[2], obstakelX[1], obstakelY[1], obstakelBreedte[1], obstakelHoogte[1]);
     image(obstakelImage[3], obstakelX[2], obstakelY[2], obstakelBreedte[2], obstakelHoogte[2]);
+  }
+};
 
+  var obstakel = function() {
+    for (var i = 0; i < obstakelX.length; i++) {
     if (collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, obstakelX[i], obstakelY[i], obstakelBreedte[i], 1)) {
       spelerY = obstakelY[i] - spelerHoogte; //speler staat op obstakel
       sprongTeller = 0; // er kan weer gesprongen worden
       staatOpObstakel = true;
       jump = false; // niet meer springen
       moetVallen = false;
+      spelerSchuin = false;
     }
     //speler valt van platform
     if(spelerY + spelerHoogte >= obstakelY[i] && spelerY < obstakelY[i] + 1) {
@@ -327,6 +383,7 @@ var obstakel = function() {
 
     if(spelerY >= minHoogte) { 
       moetVallen = false;
+      staatOpObstakel = false;
     }
 
     //speler kan niet door obstakels 
@@ -348,6 +405,9 @@ var obstakel = function() {
      }
     
   }
+};
+
+  var valObstakels = function() {
   /*
   //modder - als speler hierop staat kan hij minder hoog springen
   if (spelerX + spelerBreedte >= obstakelX[2] + 60 && spelerX + spelerBreedte <= obstakelX[2] + obstakelBreedte[2] && spelerY + spelerHoogte >= obstakelY[2] - 200 && 
@@ -385,8 +445,9 @@ var obstakel = function() {
     staatOpObstakel = false; //speler staat niet op obstakel
     versnelling = valSnelheid; //speler valt naar beneden ('botst' tegen onderkant obstakel)
   }
+};
 
-
+var duwObstakels = function() {
   //duwObstakel 
   fill("purple");
   rect(duwObstakelX, duwObstakel.yPositie, duwObstakel.breedte, duwObstakel.hoogte);
@@ -397,6 +458,7 @@ var obstakel = function() {
          duwObstakelX = duwObstakelX + 10; } //duwObstakel verschuift naar links als de speler er tegenaan loopt
     else {
       tegenObstakelLinks = true; //speler kan niet door duwObstakel zonder sleutel
+      tekstInBeeld();
          } 
     }
   if(duwObstakelX + duwObstakel.breedte >= obstakelX[3] + obstakelBreedte[3] ) { //duwObstakel stopt met bewegen
@@ -445,6 +507,7 @@ var beweegSpeler = function() {
 
 //LATER WEGHALEN
 function locatie() { //om te kijken op welke plaats je de obstakels wilt plaatsen
+  noStroke();
   fill("white");
   text("X: "+mouseX, 800, 300);
   text("Y: "+mouseY, 800, 350);
@@ -453,7 +516,7 @@ function locatie() { //om te kijken op welke plaats je de obstakels wilt plaatse
 var inDeLucht = false;
 
 function spelerSpringen() {
-  if (keyIsPressed && keyCode === 32 && moetVallen === false) { // spatie
+  if (keyIsPressed && keyCode === 32 && moetVallen === false && spelerSchuin === false) { // spatie
     jump = true; //springen
     staatOpObstakel = false;
     inDeLucht = true; //speler is in de lucht 
@@ -482,7 +545,8 @@ var checkVijandGeraakt = function() {
  */
 var checkSpelerGeraakt = function() {
     for (var i = 0; i < vijandX.length; i++) {
-    if(collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, vijandX[i], vijandY[i], vijandBreedte, vijandHoogte)){
+    if(collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, vijandX[i], vijandY[i], vijandBreedte, vijandHoogte) 
+        || collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, obstakelX[9], obstakelY[9], obstakelBreedte[9], obstakelHoogte[9])){
         console.log("De speler is geraakt door de vijand");
         return true;
       } 
@@ -548,7 +612,8 @@ function setup() {
   // Maak een canvas (rechthoek) waarin je je speelveld kunt tekenen
   createCanvas(canvasBreedte, canvasHoogte);
   background('black');
-  alert("(Voor Lisanne) A = links, D = rechts, spatie = springen\n De rode obstakels worden weggehaald als alles een plaatje heeft\n Nog werken aan: schapenTeller");
+  alert("(Voor Lisanne) A = links, D = rechts, spatie = springen\n De rode obstakels worden weggehaald als alles een plaatje heeft\n Nog werken aan: schapenTeller, werkt nog niet!!!");
+  angleMode(DEGREES);
 }
 
 function menu(){
@@ -564,8 +629,12 @@ function menu(){
         duwObstakelX = 950;
         sleutelX = 600;
         sleutelY = 75;
+        spelerSchuin = false;
+        sleutelX = 600;
+        sleutelY = 75;
     }
 }
+
 
 
 
@@ -582,6 +651,130 @@ function uitlegScherm(){
     text('level 3',levelX + 100,levelY + 415,100,100);
     text('level 4',levelX + 100,levelY + 585,100,100);
 }
+
+function tekstInBeeld() {
+    stroke(0);
+    strokeWeight(10);
+    fill("white");
+    rect(400, 200, 500, 200);
+    noStroke();
+    fill(0);
+    textSize(25);
+    text('Oeps! Je hebt een sleutel nodig om langs deze deur te kunnen...', 450, 250, 400, 500);
+}
+
+var spelerSchuin = false;
+var opTrampoline = false;
+
+function level3() {
+    if (spelStatus === LEVEL3) {
+        obstakelX =       [150, 300, 0, 0, 0, 0, 0, 0, 0 , 300, 0, 0, 0 ]; 
+        obstakelY=        [570, 480, 0, 0, 0, 0, 0, 0, 0 ,  600, 0, 0, 0 ];
+        obstakelBreedte = [100,  80, 0, 0, 0, 0, 0, 0, 0 , 400, 0, 0, 0 ];
+        obstakelHoogte =  [80 , 30, 0, 0, 0, 0, 0, 0, 0 , 50, 0, 0, 0 ];
+
+        bewegendeObstakels();
+    }
+
+}
+
+//bewegendObstakel 
+var bewegendObstakel = {
+  yPositie: 480,
+  breedte: 80,
+  hoogte: 30}
+var bewegendObstakelX = 300;
+
+
+function bewegendeObstakels() {
+
+    /* rect(bewegendObstakelX, bewegendObstakel.yPositie, bewegendObstakel.breedte, bewegendObstakel.hoogte);
+    if(collideRectRect(spelerX, spelerY, spelerHoogte, spelerBreedte, 
+        bewegendObstakelX, bewegendObstakel.yPositie, bewegendObstakel.breedte, 1)) {
+        spelerY = bewegendObstakel.yPositie - spelerHoogte; //speler staat op obstakel
+        sprongTeller = 0; // er kan weer gesprongen worden
+        staatOpObstakel = true;
+        jump = false; // niet meer springen
+        moetVallen = false;
+        spelerSchuin = false;
+                        } */
+
+    
+}
+
+/**
+ * LEVEL 2
+ */
+function level2 () {
+    if(spelStatus === LEVEL2) {
+        obstakelX =       [100, 150, 200, 250, 980, 1170, 950, 1050, 1030, 420, 20, 900, 570, 150  ]; 
+        obstakelY=        [620, 570, 520, 470, 550, 20  , 200, 600 , 250 , 650, 320, 380, 180, 180];
+        obstakelBreedte = [320, 270, 220, 170, 70 , 90  , 100, 120 , 20  , 300, 760, 150, 80 , 250 ];
+        obstakelHoogte =  [50 , 50 , 50 , 50 , 100, 630 ,  50, 50  , 150 , 50 , 30 , 30,  20 , 20];
+
+
+        //vijandX = [150, 710, 240];   // x-positie van vijand
+        //vijandY = [270, 270, 130 ];   // y-positie van vijand
+        schaapX = [950, 570, 160];
+        schaapY = [320, 120, 120];
+
+    if(spelerX  > obstakelX[7] && spelerX + spelerBreedte  < obstakelX[7] + obstakelBreedte[7]
+        && spelerY + spelerHoogte > obstakelY[7] - 400 && spelerY + spelerHoogte < obstakelY[7] + obstakelHoogte[7] && opTrampoline === false) {
+            springKracht = 18;
+            opTrampoline = true;
+            springRichting = 0;
+
+        if(opTrampoline = true && spelerY + spelerHoogte >= obstakel[7] - 10 ) {
+            opTrampoline = false;
+           print("oke")
+        }
+    }
+    else {
+        springKracht = 9;
+    }
+
+
+    push();
+    fill("black");
+    rectMode(CENTER);
+    rotate(-60);
+    translate(-213, 770) 
+    rect(0, 0, 30, 350);
+    pop();
+    
+    if(spelerX >= 414 && spelerX <= 710 && spelerY + spelerHoogte <= 490 && spelerY + spelerHoogte >= 460) { //speler gaat schuin lopen op het schuine obstakel
+        if(staatOpObstakel === true) {
+        spelerSchuin = true;
+        }
+        else {
+            spelerSchuin = false;
+        }
+    } 
+
+    if(spelerX >= 745 && spelerX <= 760 && spelerY <= 360 && spelerY >= 300) { //speler gaat weer recht lopen als hij van het schuine obstakel af is
+        if (staatOpObstakel === true) {
+        spelerSchuin = false;
+        spelerY = minHoogte;
+        //staatOpObstakel = false;
+        }
+    }
+
+    if(collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, 420, 471, 280, 30)) {
+        spelerY = 471 - spelerHoogte; //speler staat op obstakel
+      sprongTeller = 0; // er kan weer gesprongen worden
+      staatOpObstakel = true;
+      jump = false; // niet meer springen
+      moetVallen = false;
+    }
+    
+}
+
+
+
+    
+    
+};
+
 /**
  * draw
  * de code in deze functie wordt meerdere keren per seconde
@@ -620,6 +813,7 @@ function draw() {
       spelerSpringen();
       zwaartekracht();
       tekenVeld();
+      tekenObstakel();
       tekenVijand();
       tekenSchaap();
       tekenSpeler(spelerX, spelerY);
@@ -628,19 +822,55 @@ function draw() {
       locatie();
       schapenTeller();
       sleutel();
-      
+      valObstakels();
+      duwObstakels();
 
+      
+    
       if (checkGameOver()) {
         spelStatus = GAMEOVER;
       }
       break;
       case LEVEL2:
         background(0,225,225);
+        //beweegVijand();
+        tekenVeld();
+        tekenSpeler(spelerX, spelerY);
+        obstakel();
+        //tekenVijand();
+        tekenSchaap();
+        spelerSpringen();
+        beweegSpeler();
+        zwaartekracht();
         menu();
+        locatie();
+        tekenObstakel();
+        level2();
+        if (checkSpelerGeraakt()) {
+        spelStatus = GAMEOVER;
+      }
+     
+
       break;
        case LEVEL3:
-        background(225,0,0);
         menu();
+        background(0,225,225);
+        //beweegVijand();
+        tekenVeld();
+        tekenSpeler(spelerX, spelerY);
+        //obstakel();
+        //tekenVijand();
+        //tekenSchaap();
+        spelerSpringen();
+        beweegSpeler();
+        zwaartekracht();
+        menu();
+        locatie();
+        //tekenObstakel();
+        level3();
+        //if (checkSpelerGeraakt()) {
+        //spelStatus = GAMEOVER;
+      //}
       break;
        case LEVEL4:
         background(225,225,0);
