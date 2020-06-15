@@ -17,14 +17,13 @@
 /* globale variabelen die je gebruikt in je game */
 /* ********************************************* */
 
-const UITLEG = 0;
-const LEVEL = 1;
-const LEVEL1= 2;
-const LEVEL2 = 3;
-const LEVEL3 = 4;
-const LEVEL4 = 5;
-const GAMEOVER = 6;
-const GEWONNEN = 7;
+const UITLEG = 0;;
+const LEVEL1= 1;
+const LEVEL2 = 2;
+const LEVEL3 = 3;
+const LEVEL4 = 4;
+const GAMEOVER = 5;
+const GEWONNEN = 6;
 var spelStatus = UITLEG;
 
 var canvasBreedte =  1280;
