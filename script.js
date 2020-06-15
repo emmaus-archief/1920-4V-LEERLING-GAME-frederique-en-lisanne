@@ -89,6 +89,9 @@ var sleutelImg;
 var vlagPlaatje;
 var gewonnenPlaatje;
 
+//lettertype
+var lettertype;
+
 /* ********************************************* */
 /*      functies die je gebruikt in je game      */
 /* ********************************************* */
@@ -227,6 +230,8 @@ function preload() {
     sleutelImg = loadImage('afbeeldingen/sleutel.png');
     vlagPlaatje = loadImage('img/vlag.png');
     gewonnenPlaatje = loadImage('img/gewonnen.jpg');
+
+    lettertype = loadFont('GhostClouds.ttf');
 }
 
 var sleutelX = 900;
@@ -552,11 +557,21 @@ function setup() {
 
 function menu(){
     fill(0);
-    rect(20,20,200,50);
+    rect(20,20,100,50);
     fill(0,220,22);
-    text('terug',20,20,20,20);
-    if(mouseIsPressed && mouseX <= 20 + 200 && mouseX >= 20 && mouseY <= 20 + 50 && mouseY >= 20) {
+    text('levels',20,30,20,20);
+    if(mouseIsPressed && mouseX <= 20 + 100 && mouseX >= 20 && mouseY <= 20 + 50 && mouseY >= 20) {
         spelStatus = UITLEG;
+        spelerX = 50;
+        spelerY = grasHoogte - spelerHoogte;
+    }
+}
+function overnieuw(){
+    fill(25);
+    rect(110,20,100,50);
+    fill(0,220,22);
+    text('overnieuw',110,30,20,20);
+    if(mouseIsPressed && mouseX <= 110 + 110 && mouseX >= 110 && mouseY <= 20 + 50 && mouseY >= 20) {
         spelerX = 50;
         spelerY = grasHoogte - spelerHoogte;
     }
@@ -588,10 +603,13 @@ function next(){
     fill(255);
     text("NEXT",612,533,50,50);
 }
+
 function uitlegScherm(){
     background(190,220,240);
     fill(0);
-    text("titel",500,340,200,200);
+    textSize(40);
+    text("SHEEP SWEEP",370,340,1000,1000);
+    textSize(15);
     image(level1Plaatje, levelX,levelY,levelWidth,levelHeight);
     image(level2Plaatje, levelX,levelY + 170,levelWidth,levelHeight);
     image(level3Plaatje ,levelX,levelY + 340,levelWidth,levelHeight);
@@ -650,6 +668,7 @@ function draw() {
       schapenTeller();
       sleutel();
       eind();
+      overnieuw();
 
       if (checkGameOver()) {
         spelStatus = GAMEOVER;
