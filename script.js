@@ -660,15 +660,9 @@ function vallen () {
  */
 function setup() {
   // Maak een canvas (rechthoek) waarin je je speelveld kunt tekenen
-<<<<<<< HEAD
-  createCanvas(canvasBreedte,canvasHoogte);
-  background('0');
-  alert("(Voor Lisanne) A = links, D = rechts, spatie = springen\n De rode obstakels worden weggehaald als alles een plaatje heeft\n Nog werken aan: schapenTeller");
-=======
   createCanvas(canvasBreedte, canvasHoogte);
   background('black');
   alert("(Voor Lisanne) A = links, D = rechts, spatie = springen\n De rode obstakels worden weggehaald als alles een plaatje heeft");
->>>>>>> origin/master
   angleMode(DEGREES);
 }
 
@@ -989,14 +983,10 @@ function draw() {
         nieuwLevel();
     } else if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 510 + levelHeight && mouseY >= levelY + 510) {
         spelStatus = LEVEL4;
-<<<<<<< HEAD
     } 
     
     if(mouseIsPressed && mouseX <= 1000 && mouseX >= 1 && mouseY <= canvasHoogte && mouseY >= 1){
         spelStatus = SPELUITLEG;
-=======
-        nieuwLevel();
->>>>>>> origin/master
     }
 
     break;
