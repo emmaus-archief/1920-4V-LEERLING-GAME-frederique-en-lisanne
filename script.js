@@ -173,15 +173,13 @@ var beweegVijand = function() {
 var schaapBreedte = 80;
 var schaapHoogte = 60;
 var aantalSchapen = 0;
+var schaapIsZichtbaar = true;
 
 /**
  * Tekent schaap
  */
+// Op dit moment staan de schapen alleen in LEVEL1
 var tekenSchaap = function() {
-    if(spelStatus === LEVEL1) {
-        schaapY = [590, 70, 410];
-        schaapX = [1140, 456, 1130];
-    }
     
  for (var i = 0; i < schaapX.length; i++) {
     image(schaapImg, schaapX[i], schaapY[i], schaapBreedte, schaapHoogte)
@@ -191,13 +189,19 @@ var tekenSchaap = function() {
 function checkSchaapGeraakt () {
     for (var i = 0; i < schaapX.length; i++) {
     if (collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, schaapX[i], schaapY[i], schaapBreedte, schaapHoogte) ) {
-        verwijderSchaap(i); }
+        schaapIsZichtbaar = true;
+        verwijderSchaap(i); 
+        i = i - 1;
+        if(schaapIsZichtbaar === true ) {
+            aantalSchapen = aantalSchapen + 1;
+            schaapIsZichtbaar = false;
+        }
+    }
 
     }  
 };
 
 function verwijderSchaap(nummer) {
-    aantalSchapen = aantalSchapen + 1;
     schaapX.splice(nummer, 1)
     schaapY.splice(nummer, 1)
     console.log(schaapX);
@@ -211,6 +215,14 @@ var schapenTeller = function() {
     fill("black");
     textSize(20);
     text(aantalSchapen + " x ",  1175, 55);
+};
+
+var nieuwLevel = function() {
+    aantalSchapen = 0;
+    if(spelStatus === LEVEL1) {
+        schaapY = [590, 70, 410];
+        schaapX = [1140, 456, 1130];
+    }
 }
 
 var schuinLopen = false;
@@ -648,9 +660,15 @@ function vallen () {
  */
 function setup() {
   // Maak een canvas (rechthoek) waarin je je speelveld kunt tekenen
+<<<<<<< HEAD
   createCanvas(canvasBreedte,canvasHoogte);
   background('0');
   alert("(Voor Lisanne) A = links, D = rechts, spatie = springen\n De rode obstakels worden weggehaald als alles een plaatje heeft\n Nog werken aan: schapenTeller");
+=======
+  createCanvas(canvasBreedte, canvasHoogte);
+  background('black');
+  alert("(Voor Lisanne) A = links, D = rechts, spatie = springen\n De rode obstakels worden weggehaald als alles een plaatje heeft");
+>>>>>>> origin/master
   angleMode(DEGREES);
 }
 
@@ -670,6 +688,7 @@ function menu(){
         spelerSchuin = false;
         sleutelX = 600;
         sleutelY = 75;
+        
     }
 }
 
@@ -761,7 +780,6 @@ function bewegendeObstakels() {
         || spelerX + spelerBreedte <= bewegendObstakelX[1] && spelerX >= bewegendObstakelX[1] - spelerBreedte - 20 || 
         spelerX >= bewegendObstakelX[1] + bewegendObstakelBreedte && spelerX + spelerBreedte <= bewegendObstakelX[1] + bewegendObstakelBreedte + spelerBreedte + 20) {
             vanBewegendObstakelAf = true;
-            print("hallo")
         } else {
             vanBewegendObstakelAf = false;
         }
@@ -885,6 +903,7 @@ function volgende(){
         spelStatus = LEVEL2;
         spelerX = 20;
         spelerY = minHoogte;
+        nieuwLevel();
     }
     fill(255);
     text("volgende",612,533,50,50);
@@ -961,16 +980,23 @@ function draw() {
     uitlegScherm();
     if(mouseIsPressed && spelStatus === UITLEG && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + levelHeight && mouseY >= levelY) {
         spelStatus = LEVEL1;
+        nieuwLevel();
     } else if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 170 + levelHeight && mouseY >= levelY + 170) {
         spelStatus = LEVEL2;
+        nieuwLevel();
     } else if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 340 + levelHeight && mouseY >= levelY + 340) {
         spelStatus = LEVEL3;
+        nieuwLevel();
     } else if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 510 + levelHeight && mouseY >= levelY + 510) {
         spelStatus = LEVEL4;
+<<<<<<< HEAD
     } 
     
     if(mouseIsPressed && mouseX <= 1000 && mouseX >= 1 && mouseY <= canvasHoogte && mouseY >= 1){
         spelStatus = SPELUITLEG;
+=======
+        nieuwLevel();
+>>>>>>> origin/master
     }
 
     break;
