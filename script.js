@@ -32,7 +32,7 @@ var veldHoogte = 680;
 var grasHoogte = 650;
 
 var spelerBreedte = 75; 
-var spelerHoogte = 112.5;
+var spelerHoogte = 112;
 var spelerX = 50; // x-positie van speler
 var spelerY = grasHoogte - spelerHoogte; // y-positie van speler
 
@@ -50,8 +50,10 @@ var kogelY = 0;    // y-positie van kogel
 var vijandX1 = [20, 655];
 var vijandY1 = [315, 600];
 var vijandX2 = [150, 710, 240];   // x-positie van vijand
-var vijandY2 = [270, 270, 130 ];   // y-positie van vijand
-var vijandSnelheid = [2, 1, 0]; // snelhei van de vijand
+var vijandY2 = [270, 270, 130 ];  // y-positie van vijand
+var vijandX3 = [330,725,190,440];
+var vijandY3 = [100,250,240,250];
+var vijandSnelheid = [2, 1, 0,0.5]; // snelhei van de vijand
 var vijandBreedte = 50;
 var vijandHoogte = 50;
 
@@ -133,6 +135,13 @@ var tekenVijandLevel2 = function() {
     }
 };
 
+var tekenVijandLevel3 = function() {
+
+ for (var i = 0; i < vijandX3.length; i++) {
+    fill(0, 0 , 0);
+    rect(vijandX3[i], vijandY3[i], vijandBreedte, vijandHoogte); 
+    }
+};
 /**
  * Updatet globale variabelen met positie van vijand of tegenspeler
  */
@@ -144,7 +153,7 @@ var beweegVijand = function() {
     if (vijandX1[0] > 190){
         vijandSnelheid[0] = -1;
     }
-    if (vijandX1[0] === 20) {
+    if (vijandX1[0] <= 20) {
         vijandSnelheid[0] = 1;
     } 
 }
@@ -156,7 +165,7 @@ var beweegVijand = function() {
 
     if(vijandX2[0] >= 550) {
         vijandSnelheid[0] = -2
-    } else if (vijandX2[0] <= 100) {
+    } else if (vijandX2[0] <= 200) {
         vijandSnelheid[0] = 2;
     }
     if( vijandX2[1] >= 720) {
@@ -167,39 +176,50 @@ var beweegVijand = function() {
 }
 
 }
+    if(spelStatus === LEVEL3){
+        vijandX3[1] = vijandX3[1] + vijandSnelheid[3];
+        if(vijandX3[1] >= 730) {
+            vijandSnelheid[3] = -0.5;
+        } else if(vijandX3[1] <= 600) {
+            vijandSnelheid[3] = 0.5;
+        }
+    }
 
 };
 
 var schaapBreedte = 80;
 var schaapHoogte = 60;
 var aantalSchapen = 0;
+var schaapIsZichtbaar = true;
 
 /**
  * Tekent schaap
  */
 var tekenSchaap = function() {
-    if(spelStatus === LEVEL1) {
-        schaapY = [590, 70, 410];
-        schaapX = [1140, 456, 1130];
-    }
     
  for (var i = 0; i < schaapX.length; i++) {
-    image(schaapImg, schaapX[i], schaapY[i], schaapBreedte, schaapHoogte)
+    image(schaapImg, schaapX[i], schaapY[i], schaapBreedte, schaapHoogte);
  }
 };
 
 function checkSchaapGeraakt () {
     for (var i = 0; i < schaapX.length; i++) {
     if (collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, schaapX[i], schaapY[i], schaapBreedte, schaapHoogte) ) {
-        verwijderSchaap(i); }
+        schaapIsZichtbaar = true;
+        verwijderSchaap(i);
+        i = i - 1;
+        if(schaapIsZichtbaar === true) {
+            aantalSchapen = aantalSchapen + 1;
+            schaapIsZichtbaar = false;
+        }
+    }
 
     }  
 };
 
 function verwijderSchaap(nummer) {
-    aantalSchapen = aantalSchapen + 1;
-    schaapX.splice(nummer, 1)
-    schaapY.splice(nummer, 1)
+    schaapX.splice(nummer, 1);
+    schaapY.splice(nummer, 1);
     console.log(schaapX);
     console.log(schaapY);
 };
@@ -211,7 +231,44 @@ var schapenTeller = function() {
     fill("black");
     textSize(20);
     text(aantalSchapen + " x ",  1175, 55);
-}
+};
+
+var nieuwLevel1 = function(){
+    spelerX = 20;
+    spelerY = minHoogte;
+    aantalSchapen = 0;
+    schaapY = [590,70,410];
+    schaapX = [1140,456,1130];
+    sleutelX = [600];
+    sleutelY = [75];
+    vlagX = [1190];
+    vlagY = [370];
+
+};
+
+var nieuwLevel2 = function(){
+    spelerX = 20;
+    spelerY = minHoogte;
+    aantalSchapen = 0;
+    schaapY = [320,120,120];
+    schaapX = [950,590,160];
+    vlagX = [35];
+    vlagY = [220];
+    
+};
+
+var nieuwLevel3 = function(){
+    spelerX = 20;
+    spelerY = minHoogte;
+    aantalSchapen = 0;
+    schaapY = [590,90,90];
+    schaapX = [1150,810,220];
+    sleutelX = [540];
+    sleutelY = [250];
+    vlagX = [60];
+    vlagY = [190];
+    
+};
 
 var schuinLopen = false;
 /**
@@ -299,8 +356,8 @@ function preload() {
 
 }
 
-var sleutelX = 600;
-var sleutelY = 75;
+var sleutelX = [];
+var sleutelY = [];
 var sleutelBreedte = 50;
 var sleutelHoogte = 50;
 var heeftSleutelVast = false;
@@ -308,29 +365,29 @@ var sleutelIsZichtbaar = true;
 var sleutelIsOpgepakt = false;
 
 var sleutel = function() {
-    if(sleutelIsZichtbaar) {
-    image(sleutelImg, sleutelX, sleutelY, sleutelBreedte, sleutelHoogte);
+    for(var i = 0; i < sleutelX.length; i++){
+        if(sleutelIsZichtbaar) {
+            image(sleutelImg, sleutelX[i], sleutelY[i], sleutelBreedte, sleutelHoogte);
     }
-    
-    if(collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, sleutelX, sleutelY, sleutelBreedte, sleutelHoogte)) {
+        if(collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, sleutelX[i], sleutelY[i], sleutelBreedte, sleutelHoogte)) {
         heeftSleutelVast = true;
         sleutelIsOpgepakt = true;
     }
 
     if(heeftSleutelVast === true && sleutelIsOpgepakt === true ) {
         if(naarRechts === true) {
-        sleutelX = spelerX - 20;
-        sleutelY = spelerY + 50;
+        sleutelX[i] = spelerX - 20;
+        sleutelY[i] = spelerY + 50;
         }
         else if(naarLinks === true) {
-        sleutelX = spelerX + sleutelBreedte;
-        sleutelY = spelerY + 50;
+        sleutelX[i] = spelerX + sleutelBreedte;
+        sleutelY[i] = spelerY + 50;
         } 
     }
+    }
+    
 
-
-
-}
+};
 
 //obstakels
 var opValObstakel = false;
@@ -387,7 +444,7 @@ var spelerOpObstakel = function() {
     jump = false; // niet meer springen
     moetVallen = false;
     spelerSchuin = false;
-}
+};
 
   var obstakel = function() {
     for (var i = 0; i < obstakelX.length; i++) {
@@ -582,13 +639,21 @@ var checkSpelerGeraakt = function() {
         return true;
       } 
     } 
-    if (spelStatus === LEVEL2) {
-        if (collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, vijandX2[i], vijandY2[i], vijandBreedte, vijandHoogte) 
+        if (spelStatus === LEVEL2) {
+    if (collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, vijandX2[i], vijandY2[i], vijandBreedte, vijandHoogte) 
         || collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, obstakelX[9], obstakelY[9], obstakelBreedte[9], obstakelHoogte[9])){
         console.log("De speler is geraakt door de vijand");
         return true;
         }
-    } }
+    } 
+        if(spelStatus === LEVEL3) {
+    if (collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, vijandX3[i], vijandY3[i], vijandBreedte, vijandHoogte) 
+        || collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, obstakelX[9], obstakelY[9], obstakelBreedte[9], obstakelHoogte[9])){
+        console.log("De speler is geraakt door de vijand");
+        return true;
+        }
+    } 
+}
 };
 
 
@@ -652,7 +717,7 @@ function setup() {
   background('0');
   alert("(Voor Lisanne) A = links, D = rechts, spatie = springen\n De rode obstakels worden weggehaald als alles een plaatje heeft\n Nog werken aan: schapenTeller");
   angleMode(DEGREES);
-}
+};
 
 function menu(){
     fill(0);
@@ -665,13 +730,9 @@ function menu(){
         spelerY = grasHoogte - spelerHoogte;
         valObstakelY = 130;
         duwObstakelX = 950;
-        sleutelX = 600;
-        sleutelY = 75;
         spelerSchuin = false;
-        sleutelX = 600;
-        sleutelY = 75;
     }
-}
+};
 
 
 
@@ -719,16 +780,25 @@ function level3() {
         obstakelBreedte = [100, 50 , 170 , 450, 450, 150, 0, 0, 0 , 400, 0, 0, 0 ];
         obstakelHoogte =  [90 , 310, 40  , 20, 20, 20, 0, 0, 0 , 50, 0, 0, 0 ];
     }
+
+    if(collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, obstakelX[7],obstakelY[7], obstakelBreedte[7], obstakelHoogte[7])) {
+        if(heeftSleutelVast === true && sleutelIsOpgepakt === true) {
+            spelerX = 40;
+            spelerY = 160;
+        } else {
+            textInBeeld();
+        }
+    }
 };
 
 //bewegendObstakel 
-var bewegendObstakelY = [480, 385];
+var bewegendObstakelY = [480, 385]; //230
 var bewegendObstakelBreedte = 80;
 var bewegendObstakelHoogte = 30;
-var bewegendObstakelX = [400, 1180];
+var bewegendObstakelX = [400, 1180]; //80
 var vanBewegendObstakelAf = false;
-var bewegendObstakelSnelheid = [2, 0];
-var bewegendObstakelRichting = [0,-1];
+var bewegendObstakelSnelheid = [2, 0]; //2
+var bewegendObstakelRichting = [0,-1]; //0
 
 function bewegendeObstakels() {
     for (var i = 0; i < bewegendObstakelX.length; i++) {
@@ -737,7 +807,7 @@ function bewegendeObstakels() {
     bewegendObstakelX[0] = bewegendObstakelX[0] + bewegendObstakelSnelheid[0];
     bewegendObstakelY[1] = bewegendObstakelY[1] + bewegendObstakelRichting[1];
 
-    if(bewegendObstakelX[0] >= 800 ) {
+    if(bewegendObstakelX[0] >= 850 ) {
         bewegendObstakelSnelheid[0] = -2;
     } else if (bewegendObstakelX[0] <= 250) {
         bewegendObstakelSnelheid[0] = 2;
@@ -748,6 +818,11 @@ function bewegendeObstakels() {
     } else if (bewegendObstakelY[1] <= 120) {
         bewegendObstakelRichting[1] = 1;
     }
+
+   /* if(bewegendObstakelX[2]>= 400) {
+        bewegendObstakelSnelheid[2] = -2;
+    } else if (bewegendObstakelX[2] <= 50) {
+        beweg */
 
     if(collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, bewegendObstakelX[i], bewegendObstakelY[i], bewegendObstakelBreedte, bewegendObstakelHoogte )) {
         spelerOpObstakel();
@@ -761,7 +836,6 @@ function bewegendeObstakels() {
         || spelerX + spelerBreedte <= bewegendObstakelX[1] && spelerX >= bewegendObstakelX[1] - spelerBreedte - 20 || 
         spelerX >= bewegendObstakelX[1] + bewegendObstakelBreedte && spelerX + spelerBreedte <= bewegendObstakelX[1] + bewegendObstakelBreedte + spelerBreedte + 20) {
             vanBewegendObstakelAf = true;
-            print("hallo")
         } else {
             vanBewegendObstakelAf = false;
         }
@@ -781,11 +855,6 @@ function level2 () {
         obstakelBreedte = [320, 270, 220, 170, 70 , 90  , 100, 120 , 20  , 260, 760, 150, 80 , 250 ];
         obstakelHoogte =  [50 , 50 , 50 , 50 , 100, 630 ,  50, 50  , 150 , 50 , 30 , 30,  20 , 20];
 
-
-        //vijandX1 = [150, 710, 240];   // x-positie van vijand
-        //vijandY1 = [270, 270, 130 ];   // y-positie van vijand
-        //schaapX = [950, 570, 160];
-        //schaapY = [320, 120, 120];
 
     if(spelerX  > obstakelX[7] && spelerX + spelerBreedte  < obstakelX[7] + obstakelBreedte[7]
         && spelerY + spelerHoogte > obstakelY[7] - 400 && spelerY + spelerHoogte < obstakelY[7] + obstakelHoogte[7] && opTrampoline === false) {
@@ -812,7 +881,7 @@ function level2 () {
     pop();
 }
     
-    if(spelerX >= 414 && spelerX <= 710 && spelerY + spelerHoogte <= 490 && spelerY + spelerHoogte >= 460) { //speler gaat schuin lopen op het schuine obstakel
+        if(spelerX >= 414 && spelerX <= 710 && spelerY + spelerHoogte <= 490 && spelerY + spelerHoogte >= 460) { //speler gaat schuin lopen op het schuine obstakel
         if(staatOpObstakel === true) {
         spelerSchuin = true;
         }
@@ -848,31 +917,33 @@ function opnieuw(){
     fill(0,220,22);
     text('opnieuw',110,30,20,20);
     if(mouseIsPressed && mouseX <= 110 + 110 && mouseX >= 110 && mouseY <= 20 + 50 && mouseY >= 20) {
+        spelStatus = LEVEL1;
         spelerX = 50;
         spelerY = grasHoogte - spelerHoogte;
         valObstakelY = 130;
         duwObstakelX = 950;
-        sleutelX = 600;
-        sleutelY = 75;
         spelerSchuin = false;
-        sleutelX = 600;
-        sleutelY = 75;
+        sleutelX = [600];
+        sleutelY = [75];
     }
-}
+};
 
-var vlagX = 1190;
-var vlagY = 370;
+var vlagX = [];
+var vlagY = [];
 var vlagBreedte = 50;
 var vlagHoogte = 100;
 
 function eind(){
+    for(var i = 0; i < vlagX.length; i++) {
     fill(0);
     image(vlagPlaatje,vlagX,vlagY,vlagBreedte,vlagHoogte);
     if(collideRectRect(spelerX,spelerY,spelerBreedte,spelerHoogte,vlagX,vlagY,vlagBreedte,vlagHoogte)){
-        spelStatus = GEWONNEN;
+         //spelStatus = GEWONNEN;
+         volgende();
     }
 
     }
+};
 
 var volgendeX = 638;
 var volgendeY = canvasHoogte/4*3;
@@ -882,9 +953,17 @@ function volgende(){
     image(gewonnenPlaatje,290,50,700,400);
     ellipse(volgendeX,volgendeY,200,50);
     if(mouseIsPressed && mouseX <= volgendeX + 100 && mouseX >= volgendeX && mouseY <= volgendeY + 100 && mouseY >= volgendeY){
-        spelStatus = LEVEL2;
-        spelerX = 20;
-        spelerY = minHoogte;
+        if(spelStatus === LEVEL1) {
+            spelStatus = LEVEL2;
+            nieuwLevel2();
+        } else if(spelStatus === LEVEL2) {
+            spelStatus = LEVEL3;
+            nieuwLevel3();
+        } /*else if(spelStatus === LEVEL3) {
+            spelStatus = LEVEL4;
+            nieuwLevel4();
+        }*/
+       
     }
     fill(255);
     text("volgende",612,533,50,50);
@@ -892,38 +971,7 @@ function volgende(){
     
 };
 
-function overnieuw(){
-    fill(25);
-    rect(580,500,100,50);
-    fill(0,220,22);
-    text('opnieuw',590,510,20,20);
-    if(mouseIsPressed && mouseX <= 580 + 100 && mouseX >= 580 && mouseY <= 500 + 50 && mouseY >= 500) {
-        spelStatus = LEVEL1;
-        spelerX = 50;
-        spelerY = grasHoogte - spelerHoogte;
-        valObstakelY = 130;
-        duwObstakelX = 950;
-        sleutelX = 600;
-        sleutelY = 75;
-        spelerSchuin = false;
-        sleutelX = 600;
-        sleutelY = 75;
-    }
-}
 
-var vlagX = 1190;
-var vlagY = 370;
-var vlagBreedte = 50;
-var vlagHoogte = 100;
-
-function eind(){
-    fill(0);
-    image(vlagPlaatje,vlagX,vlagY,vlagBreedte,vlagHoogte);
-    if(collideRectRect(spelerX,spelerY,spelerBreedte,spelerHoogte,vlagX,vlagY,vlagBreedte,vlagHoogte)){
-        spelStatus = GEWONNEN;
-    }
-
-    }
 
 var nextX = 638;
 var nextY = canvasHoogte/4*3;
@@ -941,6 +989,12 @@ function next(){
     text("NEXT",612,533,50,50);
 };
 function spelUitleg(){
+    fill(0);
+    rect(525,415,80,30);
+    fill(255);
+    text('uitleg',550,425,40,40);
+    if(mouseIsPressed && mouseX <= 525 + 80 && mouseX >= 525 && mouseY <= 415 + 30 && mouseY >= 415){
+        spelStatus = SPELUITLEG;
     image(persoon,50,130,200,500);
     fill(0);
     triangle(195,220,335,190,290,180);
@@ -948,6 +1002,7 @@ function spelUitleg(){
     fill(255);
     textSize(14);
     text('Het weer lente! Bob de herder is al zijn schapen verloren en heeft jouw hulp nodig om ze terug te vinden. Je beweegt naar links mst A, met D beweeg je naar rechts en met de spatiebalk spring je. Probeer zoveel mogelijken schapen te pakken, maar kijk uit voor de wolven en het water en vuur... Soms heb je bepaalde dingen nodig om het level te halen(zoals een sleutel). Veel succes ermee en hopelijk maak je Bob blij door hem zijn schapen weer terug te geven.',300,100,600,500);
+    }
 };
 
 /**
@@ -959,6 +1014,7 @@ function draw() {
   switch (spelStatus) {
     case UITLEG: // startscherm
     uitlegScherm();
+    spelUitleg();
     if(mouseIsPressed && spelStatus === UITLEG && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + levelHeight && mouseY >= levelY) {
         spelStatus = LEVEL1;
     } else if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 170 + levelHeight && mouseY >= levelY + 170) {
@@ -969,9 +1025,6 @@ function draw() {
         spelStatus = LEVEL4;
     } 
     
-    if(mouseIsPressed && mouseX <= 1000 && mouseX >= 1 && mouseY <= canvasHoogte && mouseY >= 1){
-        spelStatus = SPELUITLEG;
-    }
 
     break;
 
@@ -1005,6 +1058,7 @@ function draw() {
       sleutel();
       valObstakels();
       duwObstakels();
+      opnieuw();
       eind();
 
     
@@ -1021,7 +1075,7 @@ function draw() {
         tekenSpeler(spelerX, spelerY);
         obstakel();
         tekenVijandLevel2();
-        //tekenSchaap();
+        tekenSchaap();
         spelerSpringen();
         beweegSpeler();
         zwaartekracht();
@@ -1029,22 +1083,24 @@ function draw() {
         locatie();
         tekenObstakel();
         level2();
+        schapenTeller();
+        checkSchaapGeraakt();
+        eind();
         if (checkSpelerGeraakt()) {
         spelStatus = GAMEOVER;
       }
-        
-     
+      opnieuw();
 
       break;
        case LEVEL3:
         menu();
-        background(0,225,225);
-        //beweegVijand();
+        background(0);
+        beweegVijand();
         tekenVeld();
         tekenSpeler(spelerX, spelerY);
         obstakel();
-        //tekenVijandLevel1();
-        //tekenSchaap();
+        tekenVijandLevel3();
+        tekenSchaap();
         spelerSpringen();
         beweegSpeler();
         zwaartekracht();
@@ -1053,6 +1109,9 @@ function draw() {
         tekenObstakel();
         level3();
         bewegendeObstakels();
+        checkSchaapGeraakt();
+        schapenTeller();
+        eind();
         if (checkSpelerGeraakt()) {
         spelStatus = GAMEOVER;
       }
@@ -1064,12 +1123,13 @@ function draw() {
       case GAMEOVER:
       background(0);
       menu();
-      overnieuw();
+      opnieuw();
+
       break;
-      case GEWONNEN:
+      /*case GEWONNEN:
       menu();
       volgende();
-      break;
+      break;*/
       case SPELUITLEG:
         spelUitleg();
      if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + levelHeight && mouseY >= levelY) {
