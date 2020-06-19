@@ -95,9 +95,6 @@ var sleutelImg;
 var schaapY = [];
 var schaapX = [];
 
-var wolfLopend;
-var gameOverPlaatje;
-
 /* ********************************************* */
 /*      functies die je gebruikt in je game      */
 /* ********************************************* */
@@ -142,7 +139,7 @@ var tekenVijandLevel2 = function() {
 
  for (var i = 0; i < vijandX2.length; i++) {
     fill(0, 0 , 0);
-    image(wolfLopend, vijandX2[i], vijandY2[i], vijandBreedte, vijandHoogte); 
+    image(wolfLopend,vijandX2[i], vijandY2[i], vijandBreedte, vijandHoogte); 
     }
 };
 
@@ -345,7 +342,8 @@ var beweegKogel = function() {
 var GhostClouds;
 var persoon;
 var achtergrondImg2;
-var gameOverFont;
+var wolfLopend;
+var gameOverFont
 
 /**
  * preload
@@ -355,6 +353,7 @@ function preload() {
   //lettertypen 
     GhostClouds = loadFont('lettertypen/GhostClouds.ttf');
     gameOverFont = loadFont('lettertypen/gameOverFont.ttf');
+
   //afbeeldingen
   spelerImage = [
     loadImage('afbeeldingen/herder_staand.png'),
@@ -389,8 +388,6 @@ function preload() {
     gewonnenPlaatje = loadImage('img/gewonnen.jpg');
     persoon = loadImage('img/persoon.jpg');
     wolfLopend = loadImage('img/wolfLopend.jpg');
-    //gameOverPlaatje = loadImage('img/gameOver.jpg');
-
 }
 
 var sleutelX = []; 
@@ -1034,20 +1031,12 @@ var nieuwLevel1 = function() {
 
 function opnieuw(){
     fill(25);
-    rect(500,500,100,50);
+    rect(110,20,100,50);
     fill(0,220,22);
     text('opnieuw',110,30,20,20);
-    if(mouseIsPressed) { //mouseX <= 110 + 110 && mouseX >= 110 && mouseY <= 20 + 50 && mouseY >= 20) {
-        if(spelStatus === LEVEL1) {
-        nieuwLevel1(); }
-        if(spelStatus === LEVEL2) {
-        nieuwLevel2(); }
-        if(spelStatus === LEVEL3) {
-        nieuwLevel3(); }
-        if(spelStatus === LEVEL4) {
-        nieuwLevel4(); }
-    } 
-    
+    if(mouseIsPressed && mouseX <= 110 + 110 && mouseX >= 110 && mouseY <= 20 + 50 && mouseY >= 20) {
+        nieuwLevel1();
+    }
 }
 
 var vlagX = [];
@@ -1061,7 +1050,6 @@ function eind(){
     image(vlagPlaatje,vlagX[i],vlagY[i],vlagBreedte,vlagHoogte);
     if(collideRectRect(spelerX,spelerY,spelerBreedte,spelerHoogte,vlagX[i],vlagY[i],vlagBreedte,vlagHoogte) && schaapX.length === 0){ //wanneer de speler tegen de vlag loopt en alle schapen zijn opgepakt
         volgende();
-        opnieuw();
         //spelStatus = GEWONNEN;
     }
     
@@ -1091,15 +1079,6 @@ function volgende(){
     
 }
 
-function gameOver(){
-     filter(GRAY);
-      fill(0);
-      textSize(85);
-      textFont(gameOverFont);
-      text('GAME OVER',400,100,5000,5000);
-}
-
-
 function spelUitleg(){
     fill(0);
     rect(525,415,80,30);
@@ -1119,6 +1098,14 @@ function spelUitleg(){
     }
 };
 
+function gameOver(){
+     filter(GRAY);
+      fill(0);
+      textSize(85);
+      textFont(gameOverFont);
+      text('GAME OVER',400,100,5000,5000);
+}
+
 
 /**
  * draw
@@ -1129,6 +1116,7 @@ function draw() {
   switch (spelStatus) {
     case UITLEG: // startscherm
     uitlegScherm();
+    spelUitleg();
     if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + levelHeight && mouseY >= levelY) {
         spelStatus = LEVEL1;
         nieuwLevel1();
@@ -1267,15 +1255,18 @@ function draw() {
 
 
       break;
+
+      case GAMEOVER:
+      menu();
+      gameOver();
+      opnieuw();
+      break;
       case GAMEOVER:
       background(225,225,0);
       menu();
       break;
-      //case GEWONNEN:
-      //menu();
-      //volgende();
-      //break;
-        case SPELUITLEG:
+
+       case SPELUITLEG:
         textFont('georgia');
         spelUitleg();
      if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + levelHeight && mouseY >= levelY) {
@@ -1288,6 +1279,10 @@ function draw() {
         spelStatus = LEVEL4;
     } 
     break;
+      //case GEWONNEN:
+      //menu();
+      //volgende();
+      //break;
 
 
   }
