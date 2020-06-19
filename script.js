@@ -833,7 +833,7 @@ function setup() {
 function menu(){
     fill(0);
     rect(20,20,100,50);
-    fill(0,220,22);
+    fill(255);
     text('terug',20,20,20,20);
     if(mouseIsPressed && mouseX <= 20 + 100 && mouseX >= 20 && mouseY <= 20 + 50 && mouseY >= 20) {
         spelStatus = UITLEG;
@@ -1196,8 +1196,9 @@ function opnieuw4(){
     image(opnieuwKnopje,450,300,300,150);
     if(mouseIsPressed && mouseX <= 500 + 300 && mouseX >= 500 && mouseY <= 300 + 150 && mouseY >= 300) {
         spelStatus = LEVEL4;
-        nieuwLevel1();
-    }
+        nieuwLevel4();
+        geenAchtergrond = false;
+       }
 }
 
 
@@ -1270,7 +1271,8 @@ function draw() {
         level4();  
         eind(); 
         if(geenAchtergrond === false) {
-        achtergrond(); }
+        achtergrond(); 
+    }
         if(checkSpelerGeraakt()){
           spelStatus = GAMEOVER4;
       }
