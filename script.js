@@ -21,7 +21,10 @@ const LEVEL2 = 2;
 const LEVEL3 = 3;
 const LEVEL4 = 4;
 const GAMEOVER = 5;
-const SPELUITLEG = 6;
+const GAMEOVER2 = 6;
+const GAMEOVER3 = 7;
+const GAMEOVER4 = 8;
+const SPELUITLEG = 9;
 //const GEWONNEN = 6;
 var spelStatus = UITLEG;
 
@@ -89,6 +92,8 @@ var achtergrondImg1;
 var achtergrondImg3;
 var schaapImg;
 var sleutelImg;
+var wolfLopend2;
+var opnieuwKnopje;
 
 //schapen
 var schaapY = [];
@@ -159,9 +164,11 @@ var beweegVijand = function() {
     
     if (vijandX1[0] > 190){
         vijandSnelheid[0] = -1;
+        image(wolfLopend2, vijandX1[i], vijandY1[i], vijandBreedte, vijandHoogte); 
     }
     if (vijandX1[0] <= 20) {
         vijandSnelheid[0] = 1;
+        image(wolfLopend, vijandX1[i], vijandY1[i], vijandBreedte, vijandHoogte); 
     } 
 }
 
@@ -377,7 +384,6 @@ function preload() {
   achtergrondImg3 = loadImage('afbeeldingen/herfst.png');
   schaapImg = loadImage('afbeeldingen/schaap.png');
 
-   spelerPlaatje = loadImage('img/foto.png');
     level1Plaatje = loadImage('img/zomer.jpg');
     level2Plaatje = loadImage('img/herfst.jpg');
     level3Plaatje = loadImage('img/winter.jpg');
@@ -387,6 +393,8 @@ function preload() {
     gewonnenPlaatje = loadImage('img/gewonnen.jpg');
     persoon = loadImage('img/persoon.jpg');
     wolfLopend = loadImage('img/wolfLopend.jpg');
+    wolfLopend2 = loadImage('img/wolf1.png');
+    opnieuwKnopje = loadImage('img/overnieuw.png');
 }
 
 var sleutelX = []; 
@@ -786,10 +794,10 @@ function setup() {
 
 function menu(){
     fill(0);
-    rect(20,20,200,50);
+    rect(20,20,100,50);
     fill(0,220,22);
     text('terug',20,20,20,20);
-    if(mouseIsPressed && mouseX <= 20 + 200 && mouseX >= 20 && mouseY <= 20 + 50 && mouseY >= 20) {
+    if(mouseIsPressed && mouseX <= 20 + 100 && mouseX >= 20 && mouseY <= 20 + 50 && mouseY >= 20) {
         spelStatus = UITLEG;
         spelerX = 50;
         spelerY = grasHoogte - spelerHoogte;
@@ -812,10 +820,10 @@ function uitlegScherm(){
     textFont(GhostClouds);
     text("SHEEP SWEEP",370,340,1000,1000);
     textSize(15);
-    image(level1Plaatje, levelX,levelY,levelWidth,levelHeight);
-    image(level2Plaatje, levelX,levelY + 170,levelWidth,levelHeight);
-    image(level3Plaatje ,levelX,levelY + 340,levelWidth,levelHeight);
-    image(level4Plaatje ,levelX,levelY + 510,levelWidth,levelHeight);
+    image(level4Plaatje, levelX,levelY,levelWidth,levelHeight);
+    image(level1Plaatje, levelX,levelY + 170,levelWidth,levelHeight);
+    image(level2Plaatje ,levelX,levelY + 340,levelWidth,levelHeight);
+    image(level3Plaatje ,levelX,levelY + 510,levelWidth,levelHeight);
     fill(0);
     text('level 1',levelX + 100,levelY + 75,100,100);
     text('level 2',levelX + 100,levelY + 245,100,100);
@@ -1029,12 +1037,31 @@ var nieuwLevel1 = function() {
 
 
 function opnieuw(){
-    fill(25);
-    rect(110,20,100,50);
-    fill(0,220,22);
-    text('opnieuw',110,30,20,20);
-    if(mouseIsPressed && mouseX <= 110 + 110 && mouseX >= 110 && mouseY <= 20 + 50 && mouseY >= 20) {
-        nieuwLevel1();
+    fill(255);
+    image(opnieuwKnopje,450,300,300,150);
+    if(mouseIsPressed && mouseX <= 450 + 300 && mouseX >= 450 && mouseY <= 300 + 150 && mouseY >= 300) {
+        spelStatus = LEVEL1;
+    }
+}
+function opnieuw2(){
+    fill(255);
+    image(opnieuwKnopje,450,300,300,150);
+    if(mouseIsPressed && mouseX <= 500 + 300 && mouseX >= 500 && mouseY <= 300 + 150 && mouseY >= 300) {
+        spelStatus = LEVEL2;
+    }
+}
+function opnieuw3(){
+    fill(255);
+    image(opnieuwKnopje,450,300,300,150);
+    if(mouseIsPressed && mouseX <= 500 + 300 && mouseX >= 500 && mouseY <= 300 + 150 && mouseY >= 300) {
+        spelStatus = LEVEL2;
+    }
+}
+function opnieuw4(){
+    fill(255);
+    image(opnieuwKnopje,450,300,300,150);
+    if(mouseIsPressed && mouseX <= 500 + 300 && mouseX >= 500 && mouseY <= 300 + 150 && mouseY >= 300) {
+        spelStatus = LEVEL2;
     }
 }
 
@@ -1145,6 +1172,7 @@ function draw() {
       
       if (checkSpelerGeraakt()) {
         spelStatus = GAMEOVER;
+        
       }
 
 
@@ -1162,15 +1190,9 @@ function draw() {
       sleutel();
       valObstakels();
       duwObstakels();
-      opnieuw();
       eind();
 
     
-      
-    
-      if (checkGameOver()) {
-        spelStatus = GAMEOVER;
-      }
       break;
       case LEVEL2:
         background(0,225,225);
@@ -1192,15 +1214,13 @@ function draw() {
         eind();  
 
         if (checkSpelerGeraakt()) {
-        spelStatus = GAMEOVER;
+        spelStatus = GAMEOVER2;
       }
-        opnieuw();
      
 
       break;
        case LEVEL3:
         menu();
-        background(0,225,225);
         beweegVijand();
         tekenVeld();
         tekenSpeler(spelerX, spelerY);
@@ -1215,13 +1235,12 @@ function draw() {
         locatie();
         tekenObstakel();
         level3();
-        opnieuw();
         bewegendeObstakels();
         checkSchaapGeraakt();
         schapenTeller();
         eind();
         if (checkSpelerGeraakt()) {
-        spelStatus = GAMEOVER;
+        spelStatus = GAMEOVER3;
       }
       break;
        case LEVEL4:
@@ -1246,9 +1265,9 @@ function draw() {
         bewegendeObstakels();
 
         if (checkSpelerGeraakt()) {
-        spelStatus = GAMEOVER;
+        spelStatus = GAMEOVER4;
       }
-        opnieuw();
+     
 
 
 
@@ -1259,10 +1278,29 @@ function draw() {
       menu();
       gameOver();
       opnieuw();
+      spelerX = 50;
+      spelerY = grasHoogte - spelerHoogte;
       break;
-      case GAMEOVER:
-      background(225,225,0);
+      case GAMEOVER2:
+      gameOver();
       menu();
+      opnieuw2();
+      spelerX = 50;
+      spelerY = grasHoogte - spelerHoogte;
+      break;
+      case GAMEOVER3:
+      gameOver();
+      menu();
+      opnieuw3();
+      spelerX = 50;
+      spelerY = grasHoogte - spelerHoogte;
+      break;
+      case GAMEOVER4:
+      gameOver();
+      menu();
+      opnieuw4();
+      spelerX = 50;
+      spelerY = grasHoogte - spelerHoogte;
       break;
 
        case SPELUITLEG:
