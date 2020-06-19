@@ -54,7 +54,7 @@ var vijandY2 = [270, 270, 130 ];  // y-positie van vijand
 var vijandX3 = [330,725,190,440];
 var vijandY3 = [100,250,240,250];
 var vijandSnelheid = [2, 1, 0,0.5]; // snelhei van de vijand
-var vijandBreedte = 50;
+var vijandBreedte = 70;
 var vijandHoogte = 50;
 
 var score = 0; // aantal behaalde punten
@@ -89,6 +89,7 @@ var achtergrondImg;
 var schaapImg;
 var sleutelImg;
 var persoon;
+var wolfLopend;
 
 //schapen
 var schaapY = [];
@@ -123,7 +124,7 @@ var tekenVijandLevel1 = function() {
 
  for (var i = 0; i < vijandX1.length; i++) {
     fill(0, 0 , 0);
-    rect(vijandX1[i], vijandY1[i], vijandBreedte, vijandHoogte); 
+    image(wolfLopend,vijandX1[i], vijandY1[i], vijandBreedte, vijandHoogte); 
     }
 };
 
@@ -131,7 +132,7 @@ var tekenVijandLevel2 = function() {
 
  for (var i = 0; i < vijandX2.length; i++) {
     fill(0, 0 , 0);
-    rect(vijandX2[i], vijandY2[i], vijandBreedte, vijandHoogte); 
+    image(wolfLopend,vijandX2[i], vijandY2[i], vijandBreedte, vijandHoogte); 
     }
 };
 
@@ -139,7 +140,7 @@ var tekenVijandLevel3 = function() {
 
  for (var i = 0; i < vijandX3.length; i++) {
     fill(0, 0 , 0);
-    rect(vijandX3[i], vijandY3[i], vijandBreedte, vijandHoogte); 
+    image(wolfLopend,vijandX3[i], vijandY3[i], vijandBreedte, vijandHoogte); 
     }
 };
 /**
@@ -353,6 +354,7 @@ function preload() {
     vlagPlaatje = loadImage('img/vlag.png');
     gewonnenPlaatje = loadImage('img/gewonnen.jpg');
     persoon = loadImage('img/persoon.jpg');
+    wolfLopend = loadImage('img/wolf lopend.jpg');
 
 }
 
