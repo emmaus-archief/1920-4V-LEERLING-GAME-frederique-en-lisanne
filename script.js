@@ -86,7 +86,8 @@ var level4Plaatje;
 var spelerImage;
 var ondergrondImg;
 var obstakelImage;
-var achtergrondImg;
+var achtergrondImg1;
+var achtergrondImg3;
 var schaapImg;
 var sleutelImg;
 
@@ -105,7 +106,14 @@ var schaapX = [];
 
 
 var tekenVeld = function () {
-  image(achtergrondImg, 20, 20, veldBreedte, veldHoogte);
+  if(spelStatus === LEVEL1) {
+  image(achtergrondImg1, 20, 20, veldBreedte, veldHoogte); }
+  if(spelStatus === LEVEL2) {
+    image(achtergrondImg2, 20, 20, veldBreedte, veldHoogte);
+  }
+  if (spelStatus === LEVEL3) {
+    image(achtergrondImg3, 20, 20, veldBreedte, veldHoogte);
+  }
 
   //gras (ondergrond)
   noStroke();
@@ -333,6 +341,7 @@ var beweegKogel = function() {
 
 var GhostClouds;
 var persoon;
+var achtergrondImg2;
 
 /**
  * preload
@@ -356,10 +365,14 @@ function preload() {
       loadImage('afbeeldingen/water.png'),
       loadImage('afbeeldingen/grasObstakel1.png'),
       loadImage('afbeeldingen/grasObstakel2.png'),
-      loadImage('afbeeldingen/hout1.png')
+      loadImage('afbeeldingen/hout1.png'),
+      loadImage('afbeeldingen/huis1.png'),
+      loadImage('afbeeldingen/trampoline.png'),
   ];
 
-  achtergrondImg = loadImage('afbeeldingen/achtergrond.png');
+  achtergrondImg1 = loadImage('afbeeldingen/achtergrond.png');
+  achtergrondImg2 = loadImage('afbeeldingen/strand.png');
+  achtergrondImg3 = loadImage('afbeeldingen/herfst.png');
   schaapImg = loadImage('afbeeldingen/schaap.png');
 
    spelerPlaatje = loadImage('img/foto.png');
@@ -442,18 +455,43 @@ var tekenObstakel = function() {
     obstakelX =       [290, 525, 810, 950, 410, 20, 20 , 190, 950, 390] 
     obstakelY=        [590, 500, 470, 280, 280, 365, 250, 130, 20 , 610 ]
     obstakelBreedte = [100, 120, 430, 150, 250, 350, 80 , 470, 10 , 135 ] 
-    obstakelHoogte =  [100 , 168, 60 , 210, 15 , 30 , 30 , 15 , 120, 90  ] 
+    obstakelHoogte =  [100 , 168, 60 , 190, 15 , 30 , 30 , 15 , 120, 90  ] 
     }
 
   //platforms
   for (var i = 0; i < obstakelX.length; i++) {
-    fill("red");
-    rect(obstakelX[i], obstakelY[i], obstakelBreedte[i], obstakelHoogte[i]); // de obstakels
 
+    if(spelStatus === LEVEL1) {
+    fill(96, 56, 19);
     image(obstakelImage[0], obstakelX[9], obstakelY[9], obstakelBreedte[9], obstakelHoogte[9]);
     image(obstakelImage[1], obstakelX[0], obstakelY[0], obstakelBreedte[0], obstakelHoogte[0]);
     image(obstakelImage[2], obstakelX[1], obstakelY[1], obstakelBreedte[1], obstakelHoogte[1]);
     image(obstakelImage[3], obstakelX[2], obstakelY[2], obstakelBreedte[2], obstakelHoogte[2]);
+    image(obstakelImage[4], obstakelX[3], obstakelY[3], obstakelBreedte[3], obstakelHoogte[3]);
+
+    }
+
+    if(spelStatus === LEVEL2) {
+        image(obstakelImage[5], obstakelX[7], obstakelY[7], obstakelBreedte[7], obstakelHoogte[7]);
+        if (i === 10 || i === 13 || i === 12){
+        fill(246,212, 131) 
+        } else {
+        fill(40, 27, 19);
+        }
+    }
+
+    if(spelStatus === LEVEL3) {
+        fill(186, 93, 44);
+    }
+
+    if (i !== 9) {
+        if(spelStatus === LEVEL2 && i !== 7) {
+        rect(obstakelX[i], obstakelY[i], obstakelBreedte[i], obstakelHoogte[i]); // de obstakels
+        } else if(spelStatus === LEVEL1 || spelStatus === LEVEL3 || spelStatus === LEVEL4) {
+        rect(obstakelX[i], obstakelY[i], obstakelBreedte[i], obstakelHoogte[i]); // de obstakels
+        }
+    }
+
   }
 };
 
@@ -525,7 +563,7 @@ var spelerOpObstakel = function() {
   } */
 
   //valObstakel
-  fill("white");
+  fill(96, 56, 19);
   rect(valObstakel.xPositie, valObstakelY, valObstakel.breedte, valObstakel.hoogte);
 
   if(collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, valObstakel.xPositie, valObstakelY, valObstakel.breedte, valObstakel.hoogte - 20 )) {
@@ -555,7 +593,7 @@ var spelerOpObstakel = function() {
 
 var duwObstakels = function() {
   //duwObstakel 
-  fill("purple");
+  fill(170, 114, 73);
   rect(duwObstakelX, duwObstakel.yPositie, duwObstakel.breedte, duwObstakel.hoogte);
   if(spelerX + spelerBreedte >= duwObstakelX && spelerY + spelerHoogte <= duwObstakel.yPositie + duwObstakel.hoogte && 
     spelerY + spelerHoogte >= duwObstakel.yPositie) {
@@ -740,7 +778,7 @@ function setup() {
   // Maak een canvas (rechthoek) waarin je je speelveld kunt tekenen
   createCanvas(canvasBreedte, canvasHoogte);
   background('black');
-  alert("(Voor Lisanne) A = links, D = rechts, spatie = springen\n De rode obstakels worden weggehaald als alles een plaatje heeft\n nog werken aan: opnieuwknop en level4");
+  //alert("(Voor Lisanne) A = links, D = rechts, spatie = springen\n De rode obstakels worden weggehaald als alles een plaatje heeft\n nog werken aan: opnieuwknop en level4");
   angleMode(DEGREES);
 }
 
@@ -801,10 +839,11 @@ var opTrampoline = false;
 function level3() {
     if (spelStatus === LEVEL3) {
         obstakelX =       [120, 930, 1090, 730, 440, 40, 180, 870, 0 , 310, 0, 0, 0 ]; 
-        obstakelY=        [560, 340, 480 , 150, 300, 290, 150, 530, 0 ,  600, 0, 0, 0 ];
+        obstakelY=        [560, 340, 480 , 150, 300, 290, 150, 530, 0 ,  640, 0, 0, 0 ];
         obstakelBreedte = [100, 50 , 170 , 450, 350, 200, 200, 60 , 0 , 400, 0, 0, 0 ];
-        obstakelHoogte =  [90 , 310, 40  , 20 , 20 , 30, 20, 120, 0, 50, 0, 0, 0 ];
+        obstakelHoogte =  [90 , 310, 40  , 20 , 20 , 30, 20, 120, 0, 60, 0, 0, 0 ];
     }
+    image(obstakelImage[0], obstakelX[9], obstakelY[9], obstakelBreedte[9], obstakelHoogte[9]);
 
     if(collideRectRect(spelerX, spelerY, spelerBreedte, spelerHoogte, obstakelX[7], obstakelY[7], obstakelBreedte[7], obstakelHoogte[7])) {
         if(heeftSleutelVast === true && sleutelIsOpgepakt === true) {
@@ -828,8 +867,9 @@ var uitersteWaardeX = []
 var uitersteWaardeY = []
 
 function bewegendeObstakels() {
-    for (var i = 0; i < bewegendObstakelX.length; i++) {
+    fill(96, 56, 19);
 
+    for (var i = 0; i < bewegendObstakelX.length; i++) {
     rect(bewegendObstakelX[i], bewegendObstakelY[i], bewegendObstakelBreedte, bewegendObstakelHoogte);
     bewegendObstakelX[0] = bewegendObstakelX[0] + bewegendObstakelSnelheid[0];
     //bewegendObstakelX[2] = bewegendObstakelX[2] + bewegendObstakelSnelheid[2];
