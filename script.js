@@ -5,15 +5,15 @@
 /* Game opdracht
    Informatica - Emmauscollege Rotterdam
    Template voor een game in JavaScript met de p5 library
-
    Begin met dit template voor je game opdracht,
    voeg er je eigen code aan toe.
  */
 
+
+
 /* ********************************************* */
 /* globale variabelen die je gebruikt in je game */
 /* ********************************************* */
-
 const UITLEG = 0;
 const LEVEL1= 1;
 const LEVEL2 = 2;
@@ -105,7 +105,6 @@ var achtergrondImg3;
 var achtergrondImg4;
 var schaapImg;
 var sleutelImg;
-var spelerPlaatje;
 var vlagPlaatje;
 var gewonnenPlaatje;
 var persoon;
@@ -427,7 +426,7 @@ function preload() {
   achtergrondImg4 = loadImage('afbeeldingen/winter.png');
   schaapImg = loadImage('afbeeldingen/schaap.png');
 
-  spelerPlaatje = loadImage('img/foto.png');
+  
   level1Plaatje = loadImage('img/zomer.jpg');
   level2Plaatje = loadImage('img/herfst.jpg');
   level3Plaatje = loadImage('img/winter.jpg');
@@ -756,6 +755,7 @@ function vallen () {
 function setup() {
   createCanvas(canvasBreedte, canvasHoogte);
   angleMode(DEGREES);
+  alert("Welkom bij Sheep Sweep! In een level is het mogelijk om terug te gaan naar het menu via het rode knopje linksboven.")
 }
 
 /**
@@ -763,7 +763,7 @@ function setup() {
  */
 function menu(){
     push();
-    fill(0);
+    fill(255, 0, 0);
     rect(20,20, 80,50);
     fill(255);
     text('terug',40,40,20,20); 
@@ -1003,6 +1003,8 @@ function volgende(){ //de speler gaat naar een volgend level
          spelStatus = LEVEL4;
         nieuwLevel4();
         geenAchtergrond = false;
+        } else if(spelStatus === LEVEL4) {
+            alert("Je hebt het laatste level gehaald!");
         }
     }
     fill(255);
