@@ -920,34 +920,15 @@ function level2 () {
 
 
 
-function opnieuw1(){
-    fill(0);
+function opnieuw(){
+    rect(575,340,20,20);
+    fill(255);
     text('opnieuw',575,340,20,20);
     if(mouseIsPressed && mouseX <= 560 + 60 && mouseX >= 560 && mouseY <= 320 + 60 && mouseY >= 320) {
-       nieuwLevel1();
-       spelStatus = LEVEL1;
+      spelStatus = LEVEL2;
     }
 };
 
-function opnieuw2(){
-    fill(0);
-    text('opnieuw',575,340,20,20);
-    console.log('opnieuw2');
-    if(mouseIsPressed && mouseX <= 560 + 60 && mouseX >= 560 && mouseY <= 320 + 60 && mouseY >= 320) {
-        nieuwLevel2();
-        spelStatus = LEVEL2;
-        checkSpelerGeraakt = false;
-       console.log('klikken werkt');
-    }
-};
-function opnieuw3(){
-    fill(0);
-    text('opnieuw',575,340,20,20);
-    if(mouseIsPressed && mouseX <= 560 + 60 && mouseX >= 560 && mouseY <= 320 + 60 && mouseY >= 320) {
-       nieuwLevel3();
-       spelStatus = LEVEL3;
-    }
-};
 
 var vlagX = [];
 var vlagY = [];
@@ -1054,9 +1035,8 @@ function draw() {
         // nieuwe vijand maken
       }
       
-      if (checkSpelerGeraakt() && spelStatus === LEVEL1) {
-        spelStatus = GAMEOVER1;
-        console.log('af?');
+      if (checkSpelerGeraakt()) {
+        spelStatus = GAMEOVER;
       } 
 
 
@@ -1081,6 +1061,8 @@ function draw() {
     
       if (checkGameOver()) {
         spelStatus = GAMEOVER;
+        spelerX = 50;
+        spelerY = grasHoogte - spelerHoogte;
       }
       break;
       case LEVEL2:
@@ -1101,11 +1083,11 @@ function draw() {
         schapenTeller();
         checkSchaapGeraakt();
         //eind();
+
+        if (checkSpelerGeraakt()) {
+        spelStatus = GAMEOVER;
         
-        if (checkSpelerGeraakt() && spelStatus === LEVEL2) {
-        spelStatus = GAMEOVER2;
-        console.log('af');
-      } 
+    } 
        
 
       break;
@@ -1137,22 +1119,10 @@ function draw() {
         background(0);
         menu();
       break;
-      case GAMEOVER1:
-      opnieuw1();
-      gameOver();
-      break;
-      case GAMEOVER2:
-      opnieuw2();
-      gameOver();
-      console.log('dan ben je nu hier');
-      break;
-      case GAMEOVER3:
-      opnieuw3();
-      gameOver();
-      break;
       case GAMEOVER:
       menu();
       gameOver();
+      opnieuw();
       break;
       /*case GEWONNEN:
       menu();
@@ -1170,6 +1140,6 @@ function draw() {
     } else if(mouseIsPressed && mouseX <= levelX + levelWidth && mouseX >= levelX && mouseY <= levelY + 510 + levelHeight && mouseY >= levelY + 510) {
         spelStatus = LEVEL4;
     } 
-
+    break;
   }
 }
