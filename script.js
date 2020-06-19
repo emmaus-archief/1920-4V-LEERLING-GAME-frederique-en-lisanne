@@ -20,6 +20,9 @@ const LEVEL2 = 2;
 const LEVEL3 = 3;
 const LEVEL4 = 4;
 const GAMEOVER = 5;
+const GAMEOVER2 = 6;
+const GAMEOVER3 = 7;
+const GAMEOVER4 = 8;
 const SPELUITLEG = 6;
 var spelStatus = UITLEG;
 
@@ -107,6 +110,7 @@ var vlagPlaatje;
 var gewonnenPlaatje;
 var persoon;
 var wolfLopend;
+var opnieuwKnopje;
 
 //lettertypen
 var GhostClouds;
@@ -433,6 +437,7 @@ function preload() {
   gewonnenPlaatje = loadImage('img/gewonnen.jpg');
   persoon = loadImage('img/persoon.jpg');
   wolfLopend = loadImage('img/wolfLopend.jpg');
+  opnieuwKnopje = loadImage('img/opnieuw.jpg');
 };
 
 var sleutel = function() {
@@ -757,6 +762,7 @@ function setup() {
  * Het menu scherm
  */
 function menu(){
+    push();
     fill(0);
     rect(20,20, 80,50);
     fill(255);
@@ -764,6 +770,7 @@ function menu(){
     if(mouseIsPressed && mouseX <= 40 + 20 && mouseX >= 40 && mouseY <= 40 + 20 && mouseY >= 20) { //als je op de menu knop klikt ga je terug naar het startscherm
         spelStatus = UITLEG;
     }
+    pop();
 }
 
 
@@ -992,6 +999,10 @@ function volgende(){ //de speler gaat naar een volgend level
         else if (spelStatus === LEVEL2) {
          spelStatus = LEVEL3;
         nieuwLevel3();
+        } else if (spelStatus === LEVEL3) {
+         spelStatus = LEVEL4;
+        nieuwLevel4();
+        geenAchtergrond = false;
         }
     }
     fill(255);
@@ -1040,13 +1051,43 @@ function nieuwLevel() { //elke keer als er een nieuw level wordt gestart
         tekenObstakel();
         schapenTeller();
         checkSchaapGeraakt();      
-
-        if (checkSpelerGeraakt()) {
-        spelStatus = GAMEOVER;
-      }
         menu();
 };
 
+
+function opnieuw(){
+    fill(255);
+    image(opnieuwKnopje,450,300,300,150);
+    if(mouseIsPressed && mouseX <= 450 + 300 && mouseX >= 450 && mouseY <= 300 + 150 && mouseY >= 300) {
+        spelStatus = LEVEL1;
+        nieuwLevel1();
+    }
+}
+function opnieuw2(){
+    fill(255);
+    image(opnieuwKnopje,450,300,300,150);
+    if(mouseIsPressed && mouseX <= 500 + 300 && mouseX >= 500 && mouseY <= 300 + 150 && mouseY >= 300) {
+        spelStatus = LEVEL2;
+        nieuwLevel2();
+    }
+}
+function opnieuw3(){
+    fill(255);
+    image(opnieuwKnopje,450,300,300,150);
+    if(mouseIsPressed && mouseX <= 500 + 300 && mouseX >= 500 && mouseY <= 300 + 150 && mouseY >= 300) {
+        spelStatus = LEVEL3;
+        nieuwLevel3();
+    }
+}
+function opnieuw4(){
+    fill(255);
+    image(opnieuwKnopje,450,300,300,150);
+    if(mouseIsPressed && mouseX <= 500 + 300 && mouseX >= 500 && mouseY <= 300 + 150 && mouseY >= 300) {
+        spelStatus = LEVEL4;
+        nieuwLevel4();
+        geenAchtergrond = false;
+       }
+}
 
 /**
  * draw
@@ -1083,6 +1124,9 @@ function draw() {
       valObstakels();
       duwObstakels();
       eind(); 
+      if (checkSpelerGeraakt()) {
+        spelStatus = GAMEOVER;
+      }
     break;
 
     case LEVEL2:
@@ -1090,6 +1134,9 @@ function draw() {
       tekenVijandLevel2();
       level2();
       eind(); 
+      if (checkSpelerGeraakt()) {
+        spelStatus = GAMEOVER2;
+      }
     break;
 
     case LEVEL3:
@@ -1099,6 +1146,9 @@ function draw() {
         level3();
         bewegendeObstakels();
         eind(); 
+        if (checkSpelerGeraakt()) {
+        spelStatus = GAMEOVER3;
+      }
     break;
 
     case LEVEL4:
@@ -1109,16 +1159,42 @@ function draw() {
         eind(); 
         if(geenAchtergrond === false) {
         achtergrond(); }
+        if (checkSpelerGeraakt()) {
+        spelStatus = GAMEOVER4;
+      }
     break;
 
     case GAMEOVER:
       menu();
       gameOver();
+      opnieuw();
+      spelerX = 50;
+      spelerY = grasHoogte - spelerHoogte;
     break;
 
-    case GAMEOVER:
+    case GAMEOVER2:
+      gameOver();
       menu();
+      opnieuw2();
+      spelerX = 50;
+      spelerY = grasHoogte - spelerHoogte;
     break;
+
+    case GAMEOVER3:
+      gameOver();
+      menu();
+      opnieuw3();
+      spelerX = 50;
+      spelerY = grasHoogte - spelerHoogte;
+    break;
+
+    case GAMEOVER4:
+      gameOver();
+      menu();
+      opnieuw4();
+      spelerX = 50;
+      spelerY = grasHoogte - spelerHoogte;
+    break
 
   }
 };
